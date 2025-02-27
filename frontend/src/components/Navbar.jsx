@@ -1,6 +1,7 @@
 import React, { useState } from 'react'
 import { assets } from '../assets/assets'
 import { NavLink, useNavigate } from 'react-router-dom'
+import EmergencyCallButton from './Emergency'
 const Navbar = () => {
 
     const navigate = useNavigate()
@@ -28,6 +29,9 @@ const Navbar = () => {
                     <hr className='border-none outline-none h-0.5 bg-primary w-3/5 m-auto hidden' />
                 </NavLink>
             </ul>
+
+            <EmergencyCallButton />
+
             <div className='flex gap-4 items-center'>
                 {
                     token ?
