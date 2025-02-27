@@ -90,7 +90,7 @@ const EmergencyCallButton = () => {
 
       {/* Dropdown (visible when hospital data is available) */}
       {dropdownVisible && hospital && (
-        <div ref={dropdownRef} className="absolute mt-2 w-64 bg-[#c7c7c78d] border border-gray-300 rounded-lg shadow-md p-4 right-0 ">
+        <div ref={dropdownRef} className="absolute mt-2 w-64 bg-[#cccccc83] backdrop-blur-md border border-gray-300 rounded-lg shadow-md p-4 right-0 ">
           <p className="text-lg font-semibold">{hospital.name}</p>
           <p className="text-sm text-gray-700">{hospital.phone}</p>
           <a
