@@ -27,13 +27,13 @@ const MyAppointments = () => {
             <div className="flex flex-col gap-2 justify-center">
               <button className="p-[3px] relative">
                 <div className="absolute inset-0 bg-gradient-to-r from-blue-700 to-cyan-500 rounded-lg" />
-                <div className="px-8 py-2  bg-black rounded-[6px]  relative group transition duration-200 text-white hover:bg-transparent">
+                <div className="px-8 py-2  bg-white rounded-[6px]  relative group transition duration-200 text-black hover:bg-transparent">
                   Pay online
                 </div>
               </button>
               <button className="p-[3px] relative">
                 <div className="absolute inset-0 bg-gradient-to-r from-blue-700 to-orange-500 rounded-lg" />
-                <div className="px-8 py-2  bg-black rounded-[6px]  relative group transition duration-200 text-white hover:bg-transparent">
+                <div className="px-8 py-2  bg-white rounded-[6px]  relative group transition duration-200 text-black hover:bg-transparent">
                   Cancel appointment
                 </div>
               </button>
