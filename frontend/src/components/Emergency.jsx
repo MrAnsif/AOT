@@ -24,7 +24,9 @@ const EmergencyCallButton = () => {
       const timer = setTimeout(() => setCountdown(countdown - 1), 1000);
       return () => clearTimeout(timer);
     } else if (countdown === 0 && hospital?.phone) {
-      window.location.href = `tel:${hospital.phone}`; // Auto call
+      // window.location.href = `tel:${hospital.phone}`; // Auto call
+      window.location.href = `intent://dial/${hospital.phone}#Intent;scheme=tel;package=com.android.server.telecom;end;`;
+
     }
   }, [countdown, hospital]);
 
