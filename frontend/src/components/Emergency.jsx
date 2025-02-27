@@ -5,7 +5,7 @@ const EmergencyCallButton = () => {
   const [hospital, setHospital] = useState(null);
   const [countdown, setCountdown] = useState(0);
   const [dropdownVisible, setDropdownVisible] = useState(false);
-  const apiKey = "AlzaSypHiF7TqJWeHiASN2bk5O_bdmh5uvyU7mN"; // Replace with your API key
+  const apiKey = import.meta.env.GOMAP_APIKEY // Replace with your API key
   const dropdownRef = useRef(null);
 
   // Auto-close dropdown when clicking outside
@@ -21,11 +21,11 @@ const EmergencyCallButton = () => {
 
   useEffect(() => {
     if (countdown > 0) {
-      const timer = setTimeout(() => setCountdown(countdown - 1), 1000);
+      const timer = setTimeout(() => setCountdown(countdown - 1), 100);
       return () => clearTimeout(timer);
     } else if (countdown === 0 && hospital?.phone) {
-      // window.location.href = `tel:${hospital.phone}`; // Auto call
-      window.location.href = `intent://dial/${hospital.phone}#Intent;scheme=tel;package=com.android.server.telecom;end;`;
+      window.location.href = `tel:${hospital.phone}`; // Auto call
+      // window.location.href = `intent://dial/${hospital.phone}#Intent;scheme=tel;package=com.android.server.telecom;end;`;
 
     }
   }, [countdown, hospital]);
