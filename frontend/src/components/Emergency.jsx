@@ -5,6 +5,8 @@ const EmergencyCallButton = () => {
   const [hospital, setHospital] = useState(null);
   const [countdown, setCountdown] = useState(0);
   const [dropdownVisible, setDropdownVisible] = useState(false);
+  const [bgColor, setBgColor] = useState("bg-red-600");
+
   const apiKey = import.meta.env.GOMAP_APIKEY_2 // Replace with your API key
   const dropdownRef = useRef(null);
 
@@ -12,6 +14,7 @@ const EmergencyCallButton = () => {
   useEffect(() => {
     const handleClickOutside = (event) => {
       if (dropdownRef.current && !dropdownRef.current.contains(event.target)) {
+        setBgColor("bg-red-600");
         setDropdownVisible(false);
       }
     };
@@ -60,7 +63,7 @@ const EmergencyCallButton = () => {
             alert("No contact number available.");
             return;
           }
-
+          setBgColor("bg-green-600");
           setHospital({
             name: hospitalDetails.name,
             phone: hospitalDetails.formatted_phone_number,
@@ -85,7 +88,7 @@ const EmergencyCallButton = () => {
       {/* Emergency Button */}
       <button
         onClick={fetchNearestHospital}
-        className="bg-red-600 hover:bg-red-700 text-white font-semibold tracking-tight py-2 px-2 rounded-lg shadow-lg transition duration-300"
+        className={`${bgColor} text-white font-semibold tracking-tight py-2 px-2 rounded-lg shadow-lg transition duration-300`}
       >
         {countdown > 0 ? `Calling in ${countdown}...` : "Emergency Call"}
       </button>
