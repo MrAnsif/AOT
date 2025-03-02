@@ -35,7 +35,7 @@ const Login = () => {
           <p>Full Password</p>
           <input className='border border-zinc-300 rounded w-full p-2 mt-1 `' type="password" onChange={(e) => setPassword(e.target.value)} value={password} required />
         </div>
-        <ShimmerButton className="shadow-xl">
+        <ShimmerButton className="shadow-2xl">
           <span className="whitespace-pre-wrap text-center text-sm font-medium leading-none tracking-tight text-white dark:from-white dark:to-slate-900/10 lg:text-base">
             {state === 'Sign Up' ? "Create Account" : "Login"}
           </span>
