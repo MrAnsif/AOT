@@ -5,7 +5,7 @@ import { toast } from 'react-toastify'
 
 const MyAppointments = () => {
 
-  const { backendurl, token } = useContext(AppContext)
+  const { backendurl, token, getDoctorsData } = useContext(AppContext)
 
   const [appointments, setAppointments] = useState([])
   const months = ["Jan", "Feb", "Mar", "Apr", "May", "Jun", "Jul", "Aug", "Sep", "Oct", "Nov", "Dec"];
@@ -23,6 +23,27 @@ const MyAppointments = () => {
       if (data.succes) {
         setAppointments(data.appointments.reverse())
         console.log("apoimt:", data.appointments)
+      }
+
+    } catch (error) {
+      console.log(error)
+      toast.error(error.message)
+    }
+  }
+
+  const cancelAppointment = async (appointmentId) => {
+
+    try {
+
+      const { data } = await axios.post(backendurl + '/api/user/cancel-appointment', { appointmentId }, { headers: { token } })
+
+      if (data.success) {
+        toast.success(data.message)
+        getUserAppointments()
+        getDoctorsData()
+      }
+      else {
+        toast.error(data.message)
       }
 
     } catch (error) {
@@ -58,18 +79,19 @@ const MyAppointments = () => {
             </div>
             <div className=""></div>
             <div className="flex flex-col gap-2 justify-center">
-              <button className="p-[3px] relative">
+              {!item.cancelled && <button className="p-[3px] relative">
                 <div className="absolute inset-0 bg-gradient-to-r from-blue-700 to-cyan-500 rounded-lg" />
                 <div className="px-8 py-2  bg-white rounded-[6px]  relative group transition duration-200 text-black hover:bg-transparent">
                   Pay online
                 </div>
-              </button>
-              <button className="p-[3px] relative">
+              </button>}
+              {!item.cancelled && <button onClick={() => cancelAppointment(item._id)} className="p-[3px] relative">
                 <div className="absolute inset-0 bg-gradient-to-r from-blue-700 to-orange-500 rounded-lg" />
                 <div className="px-8 py-2  bg-white rounded-[6px]  relative group transition duration-200 text-black hover:bg-transparent">
                   Cancel appointment
                 </div>
-              </button>
+              </button>}
+              {item.cancelled && <div className=' text-red-400 text-center px-4 py-1 rounded-lg border border-red-400'>Appointment cancelled</div> }
             </div>
           </div>
         ))}
