@@ -1,11 +1,14 @@
 import { assets } from '@/assets/assets'
 import { AppContext } from '@/context/AppContext'
 import React, { useContext, useEffect, useState } from 'react'
-import { useParams } from 'react-router-dom'
+import { useNavigate, useParams } from 'react-router-dom'
 import { ShinyButton } from '@/components/ui/shiny-button'
 import { MagicCard } from '@/components/ui/magic-card'
 import { useTheme } from "next-themes";
 import { InteractiveHoverButton } from '@/components/ui/interactive-hover-button'
+import { toast } from 'react-toastify'
+import axios from 'axios'
+
 
 
 
@@ -14,8 +17,10 @@ const Appointment = () => {
   const { theme } = useTheme();
 
   const { docId } = useParams()
-  const { doctors, currencySymbol } = useContext(AppContext)
+  const { doctors, currencySymbol, backendurl, token, getDoctorsData } = useContext(AppContext)
   const daysOfWeak = ['SUN', 'MON', 'TUE', 'WED', 'THU', 'FRI', 'SAT']
+
+  const navigate = useNavigate()
 
   const [docInfo, setDocInfo] = useState(null)
   const [docSlots, setDocSlots] = useState([])
@@ -59,10 +64,22 @@ const Appointment = () => {
           minute: '2-digit',
         });
 
-        timeSlots.push({
-          datetime: new Date(currentDate),
-          time: formattedTime,
-        });
+        let day = currentDate.getDate()
+        let month = currentDate.getMonth() + 1
+        let year = currentDate.getFullYear()
+
+        const slotDate = day + "_" + month + "_" + year
+        const slotTime = formattedTime
+
+        const isSlotAvailable = docInfo.slots_booked[slotDate] && docInfo.slots_booked[slotDate].includes(slotTime) ? false : true
+
+        if (isSlotAvailable) {
+          timeSlots.push({
+            datetime: new Date(currentDate),
+            time: formattedTime,
+          });
+        }
+
 
         // Increment time by 30 minutes
         currentDate.setMinutes(currentDate.getMinutes() + 30);
@@ -75,6 +92,47 @@ const Appointment = () => {
     // Update state after processing all days
     setDocSlots(slotsForWeek);
   };
+
+
+
+  const bookAppointment = async () => {
+    if (!token) {
+      toast.warn('Login to book appointments')
+      return navigate('/login')
+    }
+
+    try {
+
+      const date = docSlots[slotIndex][0].datetime
+
+      let day = date.getDate()
+      let month = date.getMonth() + 1
+      let year = date.getFullYear()
+
+      const slotDate = day + "_" + month + "_" + year
+
+      const { data } = await axios.post(backendurl + '/api/user/book-appointment', { docId, slotDate, slotTime }, { headers: { token } })
+
+      console.log("API Response:", data);
+
+      if (data.success) {
+        toast.success(data.message)
+        getDoctorsData()
+        navigate('/my-appointments')
+      }
+      else {
+        toast.error(data.message)
+      }
+
+
+
+    } catch (error) {
+      console.log(error)
+      toast.error(error.message)
+    }
+
+  }
+
 
   useEffect(() => {
     fetchDocInfo()
@@ -124,7 +182,7 @@ const Appointment = () => {
         <div className="flex gap-3 items-center w-full overflow-x-scroll mt-4">
           {
             docSlots.length && docSlots.map((item, index) => (
-              <MagicCard
+              <MagicCard key={index}
                 className="cursor-pointer flex-col items-center justify-center whitespace-nowrap shadow-2xl"
                 gradientColor={theme === "dark" ? "#262626" : "#D9D9D955"}
               >
@@ -143,7 +201,7 @@ const Appointment = () => {
             </p>
           ))}
         </div>
-        <InteractiveHoverButton className='px-6 py-2 my-6'>Book Appointment</InteractiveHoverButton>
+        <InteractiveHoverButton onClick={bookAppointment} className='px-6 py-2 my-6'>Book Appointment</InteractiveHoverButton>
       </div>
     </div>
   )
