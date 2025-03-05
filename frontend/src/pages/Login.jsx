@@ -85,7 +85,7 @@ const Login = () => {
             {state === 'Sign Up' ? "Create Account" : "Login"}
           </span>
         </ShimmerButton> */}
-        <button type='submit' className="whitespace-pre-wrap text-center text-sm font-medium leading-none tracking-tight text-black dark:from-white dark:to-slate-900/10 lg:text-base">{state === 'Sign Up' ? "Create Account" : "Login"}</button>
+        <button type='submit' className="whitespace-pre-wrap text-center text-sm font-medium leading-none tracking-tight bg-[#0a48a8] px-3 py-1 rounded-full text-white  dark:from-white dark:to-slate-900/10 lg:text-base">{state === 'Sign Up' ? "Create Account" : "Login"}</button>
         {
           state === 'Sign Up' ?
             <p>Already have an account? <span onClick={() => setState('Login')} className='text-primary underline cursor-pointer'>Login here</span></p>

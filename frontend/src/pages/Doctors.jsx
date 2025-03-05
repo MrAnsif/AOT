@@ -54,7 +54,7 @@ const Doctors = () => {
                   imageHeight="300px"
                   imageWidth="300px"
                   rotateAmplitude={14}
-                  scaleOnHover={1.2}
+                  scaleOnHover={1.02}
                   showMobileWarning={false}
                   showTooltip={true}
                   displayOverlayContent={true}
