@@ -1,27 +1,66 @@
 import { assets } from '@/assets/assets'
 import { ShinyButton } from '@/components/ui/shiny-button'
-import React, { useState } from 'react'
+import { AppContext } from '@/context/AppContext'
+import axios from 'axios'
+import React, { useContext, useState } from 'react'
+import { toast } from 'react-toastify'
 
 const MyProfile = () => {
 
-  const [userData, setUserData] = useState({
-    name: "Kenz",
-    image: assets.profile_pic,
-    email: "kenz@gmail.com",
-    phone: "1234567890",
-    address: {
-      line1: "somewhere",
-      line2: "Earth"
-    },
-    gender: "Male",
-    dob: "2000-04-03"
-  })
+
+  const { userData, setUserData, token, backendurl, loadUserProfileData } = useContext(AppContext)
 
   const [isEdit, setIsEdit] = useState(false)
+  const [image, setImage] = useState(false)
 
-  return (
+  const updateUserProfileData = async () => {
+
+    try {
+
+      const formData = new FormData()
+      formData.append('name', userData.name)
+      formData.append('phone', userData.phone)
+      formData.append('address', JSON.stringify(userData.address))
+      formData.append('gender', userData.gender)
+      formData.append('dob', userData.dob)
+
+      image && formData.append('image', image)
+      const { data } = await axios.post(backendurl + '/api/user/update-profile', formData, { headers: { token } })
+
+      if (data.success) {
+        toast.success(data.message)
+        await loadUserProfileData()
+        setIsEdit(false)
+        setImage(false)
+      }
+      else {
+        toast.error(data.message)
+      }
+
+
+    } catch (error) {
+      console.log(error)
+      toast.error(error.message)
+    }
+
+  }
+
+  return userData && (
     <div className='mx-w-lg flex flex-col gap-2 text-sm'>
-      <img className='w-36 rounded-md' src={userData.image} alt="" />
+
+      {
+        isEdit
+          ? <label htmlFor='image'>
+            <div className='inline-block relative cursor-pointer'>
+              <img className='w-36 rounded opacity-75' src={image ? URL.createObjectURL(image) : userData.image} alt="" />
+              <img className='w-10 absolute bottom-12 right-12' src={image ? '' : assets.upload_icon} alt="" />
+            </div>
+            <input onChange={(e) => setImage(e.target.files[0])} type="file" id='image' hidden />
+          </label>
+          :
+          <img className='w-36 rounded-md' src={userData.image} alt="" />
+
+      }
       {
         isEdit ?
           <input className='bg-gray-50 text-3xl font-medium max-w-60 mt-4' type="text" value={userData.name} onChange={e => setUserData(prev => ({ ...prev, name: e.target.value }))} />
@@ -83,7 +122,7 @@ const MyProfile = () => {
       <div className='my-6 '>
         {
           isEdit ?
-            <ShinyButton className='font-black px-3 ' onClick={() => setIsEdit(false)}>Save</ShinyButton>
+            <ShinyButton className='font-black px-3 ' onClick={updateUserProfileData}>Save</ShinyButton>
             :
             <ShinyButton className='font-black px-3 ' onClick={() => setIsEdit(true)}>Edit</ShinyButton>
         }
