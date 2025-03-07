@@ -79,12 +79,12 @@ const MyAppointments = () => {
             </div>
             <div className=""></div>
             <div className="flex flex-col gap-2 justify-center">
-              {!item.cancelled && <button className="p-[3px] relative">
+              {/* {!item.cancelled && <button className="p-[3px] relative">
                 <div className="absolute inset-0 bg-gradient-to-r from-blue-700 to-cyan-500 rounded-lg" />
                 <div className="px-8 py-2  bg-white rounded-[6px]  relative group transition duration-200 text-black hover:bg-transparent">
                   Pay online
                 </div>
-              </button>}
+              </button>} */}
               {!item.cancelled && <button onClick={() => cancelAppointment(item._id)} className="p-[3px] relative">
                 <div className="absolute inset-0 bg-gradient-to-r from-blue-700 to-orange-500 rounded-lg" />
                 <div className="px-8 py-2  bg-white rounded-[6px]  relative group transition duration-200 text-black hover:bg-transparent">
