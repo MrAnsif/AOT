@@ -123,7 +123,9 @@ const updateProfile = async (req, res) => {
 const bookAppointment = async (req, res) => {
 
     try {
-        const { userId, docId, slotDate, slotTime } = req.body
+        const { userId, docId, slotDate, slotTime, homeConsultancy } = req.body
+
+    
 
         const docData = await doctorModel.findById(docId).select('-password')
 
@@ -159,6 +161,7 @@ const bookAppointment = async (req, res) => {
             slotTime,
             slotDate,
             date: Date.now(),
+            homeConsultancy,
         }
 
         // const newappointment = new appointmentData(appointmentData)
@@ -219,7 +222,7 @@ const cancelAppointment = async (req, res) => {
 
         await doctorModel.findByIdAndUpdate(docId, { slots_booked })
 
-        res.json({success:true, message:'Appointment Cancelled'})
+        res.json({ success: true, message: 'Appointment Cancelled' })
 
     } catch (error) {
         console.log(error)
@@ -227,6 +230,52 @@ const cancelAppointment = async (req, res) => {
     }
 }
 
+// api to add medical history
+const addMedicalHistory = async (req, res) => {
+    try {
+        const { userId, condition, diagnosisDate } = req.body;
+
+        if (!userId || !condition || !diagnosisDate) {
+            return res.json({ success: false, message: "Missing required fields" });
+        }
+
+        const user = await userModel.findById(userId);
+        if (!user) {
+            return res.json({ success: false, message: "User not found" });
+        }
+
+        // Update medical history
+        await userModel.findByIdAndUpdate(
+            userId,
+            { $push: { medicalHistory: { condition, diagnosisDate } } },
+            { new: true }
+        );
+
+        res.json({ success: true, message: "Medical history updated successfully" });
+
+    } catch (error) {
+        console.log(error);
+        res.json({ success: false, message: error.message });
+    }
+};
+
+// Get medical history
+const getMedicalHistory = async (req, res) => {
+    try {
+        const { userId } = req.body;
+
+        const user = await userModel.findById(userId).select("medicalHistory");
+        if (!user) {
+            return res.json({ success: false, message: "User not found" });
+        }
+
+        res.json({ success: true, medicalHistory: user.medicalHistory });
+
+    } catch (error) {
+        console.log(error);
+        res.json({ success: false, message: error.message });
+    }
+};
 
 // api for razorpayment
 
@@ -240,4 +289,4 @@ const cancelAppointment = async (req, res) => {
 // }
 
 
-export { registerUser, loginUser, getProfile, updateProfile, bookAppointment, listAppointment, cancelAppointment }
+export { registerUser, loginUser, getProfile, updateProfile, bookAppointment, listAppointment, cancelAppointment, addMedicalHistory, getMedicalHistory }
