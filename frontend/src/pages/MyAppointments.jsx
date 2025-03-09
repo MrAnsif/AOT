@@ -19,7 +19,6 @@ const MyAppointments = () => {
     try {
       const { data } = await axios.get(backendurl + '/api/user/appointments', { headers: { token } })
 
-      console.log("API Response:", data);
       if (data.succes) {
         setAppointments(data.appointments.reverse())
         console.log("apoimt:", data.appointments)

@@ -8,6 +8,7 @@ import { useTheme } from "next-themes";
 import { InteractiveHoverButton } from '@/components/ui/interactive-hover-button'
 import { toast } from 'react-toastify'
 import axios from 'axios'
+import styled from 'styled-components'
 
 
 
@@ -26,6 +27,7 @@ const Appointment = () => {
   const [docSlots, setDocSlots] = useState([])
   const [slotIndex, setSlotIndex] = useState(0)
   const [slotTime, setSlotTime] = useState('')
+  const [homeConsultancy, setHomeConsultancy] = useState(false)
 
   const fetchDocInfo = async () => {
     const docInfo = doctors.find(doc => doc._id === docId)
@@ -111,9 +113,8 @@ const Appointment = () => {
 
       const slotDate = day + "_" + month + "_" + year
 
-      const { data } = await axios.post(backendurl + '/api/user/book-appointment', { docId, slotDate, slotTime }, { headers: { token } })
+      const { data } = await axios.post(backendurl + '/api/user/book-appointment', { docId, slotDate, slotTime, homeConsultancy }, { headers: { token } })
 
-      console.log("API Response:", data);
 
       if (data.success) {
         toast.success(data.message)
@@ -171,7 +172,7 @@ const Appointment = () => {
             <p className='flex gap-1 items-center text-sm font-medium text-gray-900 mt-3' >About <img src={assets.info_icon} alt="" /></p>
             <p className='text-sm text-gray-700 max-w-[700px] mt-1' >{docInfo.about}</p>
           </div>
-          <p className='text-gray-700 font-medium mt-4 '>Appointment fee:
+          <p className='text-gray-700  font-medium mt-4 '>Appointment fee:
             <span className='text-gray-800'>{currencySymbol}{docInfo.fees}</span>
           </p>
         </div>
@@ -201,10 +202,63 @@ const Appointment = () => {
             </p>
           ))}
         </div>
+
+        <StyledWrapper>
+          <label className="cyberpunk-checkbox-label px-4 pt-6">
+            <input type="checkbox"
+              className="cyberpunk-checkbox"
+              checked={homeConsultancy}
+              onChange={(e) => setHomeConsultancy(e.target.checked)} />
+            Home Consultancy</label>
+        </StyledWrapper>
+
         <InteractiveHoverButton onClick={bookAppointment} className='px-6 py-2 my-6'>Book Appointment</InteractiveHoverButton>
       </div>
     </div>
   )
 }
+
+
+const StyledWrapper = styled.div`
+  .cyberpunk-checkbox {
+    appearance: none;
+    width: 20px;
+    height: 20px;
+    border: 2px solid #163d77;
+    border-radius: 5px;
+    background-color: transparent;
+    display: inline-block;
+    position: relative;
+    margin-right: 10px;
+    cursor: pointer;
+  }
+
+  .cyberpunk-checkbox:before {
+    content: "";
+    background-color: #163d77;
+    display: block;
+    position: absolute;
+    top: 50%;
+    left: 50%;
+    transform: translate(-50%, -50%) scale(0);
+    width: 10px;
+    height: 10px;
+    border-radius: 3px;
+    transition: all 0.3s ease-in-out;
+  }
+
+  .cyberpunk-checkbox:checked:before {
+    transform: translate(-50%, -50%) scale(1);
+  }
+
+  .cyberpunk-checkbox-label {
+    font-size: 15px;
+    color: #21242c;
+    cursor: pointer;
+    user-select: none;
+    display: flex;
+    align-items: center;
+  }`;
+
 
 export default Appointment
