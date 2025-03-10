@@ -149,7 +149,7 @@ const DoctorAppointments = () => {
             </div>
             <ul className="space-y-2 mt-3">
               {selectedHistory.map((history, i) => (
-                <li key={i} className="border-b pb-2">
+                <li key={i} className="border-b-zinc-300 border-b pb-2">
                   <span className="font-medium">{history.condition}</span>
                   <span className="text-gray-400 ml-1">
                     - {new Date(history.diagnosisDate).toLocaleDateString()}

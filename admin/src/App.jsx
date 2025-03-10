@@ -25,7 +25,7 @@ const App = () => {
       <Navbar />
       <div className='flex items-start'>
         <Sidebar />
-        <span className='ml-54 mt-16 px-1 py-8 h-screen overflow-y-auto'>
+        <span className='ml-14 md:ml-54 mt-16 px-1 py-8 h-screen w-full overflow-y-auto'>
 
           <Routes >
             {/* admin route */}
