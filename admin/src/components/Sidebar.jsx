@@ -21,7 +21,7 @@ const Sidebar = () => {
                             }
                         >
                             <img src={assets.home_icon} alt="" className="w-6 h-6" />
-                            <p className="font-medium">Dashboard</p>
+                            <p className="font-medium md:block hidden">Dashboard</p>
                         </NavLink>
                         <NavLink
                             to={"/all-appointments"}
@@ -31,7 +31,7 @@ const Sidebar = () => {
                             }
                         >
                             <img src={assets.appointment_icon} alt="" className="w-6 h-6" />
-                            <p className="font-medium">Appointments</p>
+                            <p className="font-medium md:block hidden">Appointments</p>
                         </NavLink>
                         <NavLink
                             to={"/add-doctor"}
@@ -41,7 +41,7 @@ const Sidebar = () => {
                             }
                         >
                             <img src={assets.add_icon} alt="" className="w-6 h-6" />
-                            <p className="font-medium">Add Doctor</p>
+                            <p className="font-medium md:block hidden">Add Doctor</p>
                         </NavLink>
                         <NavLink
                             to={"/doctor-list"}
@@ -51,7 +51,7 @@ const Sidebar = () => {
                             }
                         >
                             <img src={assets.people_icon} alt="" className="w-6 h-6" />
-                            <p className="font-medium">Doctors List</p>
+                            <p className="font-medium md:block hidden">Doctors List</p>
                         </NavLink>
                     </ul>
                 )
