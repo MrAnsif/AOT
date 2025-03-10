@@ -2,9 +2,10 @@ import React, { useContext, useEffect, useState } from 'react';
 import { DoctorContext } from '../../context/DoctorContext';
 import { Calendar, Clock, FileText, User, X } from 'lucide-react';
 import { AppContext } from '../../context/AppContext';
+import { assets } from '../../assets/assets';
 
 const DoctorAppointments = () => {
-  const { dToken, appointments, getAppointments } = useContext(DoctorContext);
+  const { dToken, appointments, getAppointments, completeAppointment, cancelAppointment } = useContext(DoctorContext);
   const { calculateAge, slotDateFormat } = useContext(AppContext);
 
   // State for Modal
@@ -30,7 +31,7 @@ const DoctorAppointments = () => {
 
         <div className="bg-white rounded-lg shadow-md overflow-hidden">
           {/* Table Header */}
-          <div className="hidden md:grid md:grid-cols-7 gap-4 p-4 bg-gray-100 text-sm font-medium text-gray-700 border-b">
+          <div className="hidden md:grid md:grid-cols-[0.5fr_1.6fr_0.5fr_1.3fr_0.6fr_1.6fr_1.2fr_1.2fr] gap-4 p-4 bg-gray-100 text-sm font-medium text-gray-700 border-b">
             <div className="flex items-center">#</div>
             <div className="flex items-center">
               <User size={16} className="mr-2" />
@@ -47,12 +48,13 @@ const DoctorAppointments = () => {
               Medical History
             </div>
             <div className="flex items-center">Type</div>
+            <div className="flex items-center">Status</div>
           </div>
 
           {/* Table Body */}
           <div className="divide-y divide-gray-200">
             {appointments.map((item, index) => (
-              <div key={index} className="md:grid md:grid-cols-7 gap-4 p-4 hover:bg-gray-50 transition-colors">
+              <div key={index} className="md:grid md:grid-cols-[0.5fr_1.6fr_0.5fr_1.3fr_0.6fr_1.6fr_1.2fr_1.2fr] gap-4 p-4 hover:bg-gray-50 transition-colors">
                 <div className="hidden md:flex items-center text-gray-600">{index + 1}</div>
 
                 {/* Patient info */}
@@ -120,8 +122,31 @@ const DoctorAppointments = () => {
                   </ul>
                 </div>
 
-                <p>{item.homeConsultancy ? '🏡 Home Visit' : '🏥 Clinic Visit'}</p>
-              </div>
+                {/* <div className='flex justify-between mr-6 '> */}
+                  <div>
+                    <p className='block md:hidden text-zinc-600'>Type:</p>
+                    <p>{item.homeConsultancy ? 'Home Visit' : 'Clinic Visit'}</p>
+                  </div>
+
+                  <div>
+                    <p className='block md:hidden text-zinc-600'>Status:</p>
+                    {
+                      item.cancelled
+                        ?
+                        <p className='text-red-500 text-xs font-medium'>Cancelled</p>
+                        : item.isCompleted
+                          ?
+                          <p className='text-green-500 text-xs font-medium'>Completed</p>
+                          :
+                          <div className='flex w-10'>
+                            <img onClick={() => cancelAppointment(item._id)} src={assets.cancel_icon} alt="" className='cursor-pointer' />
+                            <img onClick={() => completeAppointment(item._id)} src={assets.tick_icon} alt="" className='cursor-pointer' />
+                          </div>
+                    }
+                  </div>
+                </div>
+
+              // </div>
             ))}
           </div>
         </div>
