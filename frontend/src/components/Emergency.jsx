@@ -7,8 +7,10 @@ const EmergencyCallButton = () => {
   const [dropdownVisible, setDropdownVisible] = useState(false);
   const [bgColor, setBgColor] = useState("bg-red-600");
 
-  const apiKey = import.meta.env.GOMAP_APIKEY_2 // Replace with your API key
+  const apiKey = import.meta.env.VITE_GOMAP_APIKEY_2 // Replace with your API key
   const dropdownRef = useRef(null);
+
+  console.log(apiKey)
 
   // Auto-close dropdown when clicking outside
   useEffect(() => {
