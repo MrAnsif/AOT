@@ -149,14 +149,29 @@ const doctorDashboard = async (req, res) => {
 
         const appointments = await appointmentModel.find({ docId })
 
-        let earning = 0
+        let earnings = 0
         appointments.map((item) => {
 
-            // if (item.isCompleted) {
-            //     earning += item.amount
-            // }
-
+            if (item.isCompleted) {
+                earnings += item.amount
+            }
         })
+
+        let patients = []
+        appointments.map((item) => {
+            if (!patients.includes(item.userId)) {
+                patients.push(item.userId)
+            }
+        })
+
+        const dashData = {
+            earnings,
+            appointments: appointments.length,
+            patients: patients.length,
+            latestAppointments: appointments.reverse().slice(0, 5)
+        }
+
+        res.json({ success: true, dashData })
 
     } catch (error) {
         console.log(error);
@@ -164,5 +179,31 @@ const doctorDashboard = async (req, res) => {
     }
 }
 
+// API to see doc profile for doctor
 
-export { changeAvailability, doctorList, loginDoctor, appointmentsDoctor, appointmentCancel, appointmentCompleted }
+const doctorProfile = async (req, res) => {
+    try {
+
+        const { docId } = req.body
+        const profileData = await doctorModel.findById(docId).select('-password')
+
+        res.json({ success: true, profileData })
+
+    } catch (error) {
+        console.log(error);
+        res.json({ success: false, message: error.message });
+    }
+}
+
+// API to update docProfile for doctor
+const updateDoctorProfile = async (req, res) => {
+
+    const { docId, fees, address, available } = req.body
+
+    await doctorModel.findByIdAndUpdate(docId, { fees, address, available })
+
+    res.json({ success: true, message: 'profile updated' })
+}
+
+
+export { changeAvailability, doctorList, loginDoctor, appointmentsDoctor, appointmentCancel, appointmentCompleted, doctorDashboard, updateDoctorProfile, doctorProfile }
