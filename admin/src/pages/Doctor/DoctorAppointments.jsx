@@ -122,21 +122,21 @@ const DoctorAppointments = () => {
                   </ul>
                 </div>
 
-                {/* <div className='flex justify-between mr-6 '> */}
-                  <div>
+         
+                  <div className='grid grid-cols-2 mb-2'>
                     <p className='block md:hidden text-zinc-600'>Type:</p>
                     <p>{item.homeConsultancy ? 'Home Visit' : 'Clinic Visit'}</p>
                   </div>
 
-                  <div>
+                  <div className='grid grid-cols-2'>
                     <p className='block md:hidden text-zinc-600'>Status:</p>
                     {
                       item.cancelled
                         ?
-                        <p className='text-red-500 text-xs font-medium'>Cancelled</p>
+                        <p className='text-red-500 font-medium'>Cancelled</p>
                         : item.isCompleted
                           ?
-                          <p className='text-green-500 text-xs font-medium'>Completed</p>
+                          <p className='text-green-500  font-medium'>Completed</p>
                           :
                           <div className='flex w-10'>
                             <img onClick={() => cancelAppointment(item._id)} src={assets.cancel_icon} alt="" className='cursor-pointer' />
@@ -146,7 +146,7 @@ const DoctorAppointments = () => {
                   </div>
                 </div>
 
-              // </div>
+
             ))}
           </div>
         </div>

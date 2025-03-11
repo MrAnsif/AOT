@@ -11,6 +11,8 @@ const DoctorContextProvider = (props) => {
 
     const [dToken, setDToken] = useState(localStorage.getItem('dToken') ? localStorage.getItem('dToken') : '')
     const [appointments, setAppointments] = useState([])
+    const [dashData, setDashData] = useState(false)
+    const [profileData, setProfileData] = useState(false)
 
     const getAppointments = async () => {
         try {
@@ -18,7 +20,7 @@ const DoctorContextProvider = (props) => {
             const { data } = await axios.get(backendurl + '/api/doctor/appointments', { headers: { dToken } })
             if (data.success) {
                 setAppointments(data.appointments.reverse())
-                console.log(data)
+
             }
             else {
                 toast.error(data.message)
@@ -70,7 +72,40 @@ const DoctorContextProvider = (props) => {
             console.log(error)
             toast.error(error.message)
         }
+    }
 
+    const getDashData = async () => {
+        try {
+
+            const { data } = await axios.get(backendurl + '/api/doctor/dashboard', { headers: { dToken } })
+
+            if (data.success) {
+                setDashData(data.dashData)
+                console.log(data.dashData)
+            } else {
+                toast.error(data.message)
+            }
+
+        } catch (error) {
+            console.log(error)
+            toast.error(error.message)
+        }
+    }
+
+    const getProfileData = async () => {
+        try {
+
+            const { data } = await axios.get(backendurl + '/api/doctor/profile', { headers: { dToken } })
+
+            if(data.success){
+                setProfileData(data.profileData)
+                console.log(data.profileData)
+            }
+
+        } catch (error) {
+            console.log(error)
+            toast.error(error.message)
+        }
     }
 
     const value = {
@@ -79,6 +114,8 @@ const DoctorContextProvider = (props) => {
         appointments, setAppointments,
         getAppointments,
         completeAppointment, cancelAppointment,
+        dashData, setDashData, getDashData,
+        profileData, setProfileData, getProfileData,
 
 
     }
