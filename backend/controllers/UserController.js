@@ -125,7 +125,7 @@ const bookAppointment = async (req, res) => {
     try {
         const { userId, docId, slotDate, slotTime, homeConsultancy } = req.body
 
-    
+
 
         const docData = await doctorModel.findById(docId).select('-password')
 
@@ -279,14 +279,62 @@ const getMedicalHistory = async (req, res) => {
 
 // api for razorpayment
 
-// const razorpayInstance = new razorpay({
-//     key_id:'',
-//     key_secret:''
-// })
+const razorpayInstance = new razorpay({
+    key_id: process.env.RAZORPAY_KEY_ID,
+    key_secret: process.env.RAZORPAY_KEY_SECRET
+})
 
-// const paymentRazorpay = async (req, res)=>{
+const paymentRazorpay = async (req, res) => {
 
-// }
+    try {
+
+        const { appointmentId } = req.body
+        const appointmentData = await appointmentModel.findById(appointmentId)
+
+        if (!appointmentData || appointmentData.cancelled) {
+            return res.json({ success: false, message: "Appointment cancelled or not found." })
+        }
+
+        // creating options for razorpay
+        const options = {
+            amount: appointmentData.amount * 100,
+            currency: process.env.CURRENCY,
+            receipt: appointmentId,
+        }
+
+        // creation of an order
+        const order = await razorpayInstance.orders.create(options)
+
+        res.json({ success: true, order })
+
+    } catch (error) {
+        console.log(error);
+        res.json({ success: false, message: error.message });
+    }
+
+}
+
+// api to verify payment of razorpay
+const verifyRazorpay = async (req, res) => {
+    try {
+
+        const { razorpay_order_id } = req.body
+        const orderInfo = await razorpayInstance.orders.fetch(razorpay_order_id)
+
+        if (orderInfo.status === 'paid') {
+
+            await appointmentModel.findByIdAndUpdate(orderInfo.receipt, { payment: true })
+            res.json({ success: true, message: "Payment Successful" })
+
+        } else {
+            res.json({ success: false, message: "Payment Failed" })
+        }
+
+    } catch (error) {
+        console.log(error);
+        res.json({ success: false, message: error.message });
+    }
+}
 
 
-export { registerUser, loginUser, getProfile, updateProfile, bookAppointment, listAppointment, cancelAppointment, addMedicalHistory, getMedicalHistory }
+export { registerUser, loginUser, getProfile, updateProfile, bookAppointment, listAppointment, cancelAppointment, addMedicalHistory, getMedicalHistory, paymentRazorpay, verifyRazorpay }
