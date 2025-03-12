@@ -19,7 +19,7 @@ const AllApointments = () => {
       <div className="overflow-x-auto">
         <div className="min-w-full">
           {/* Header Row */}
-          <div className="hidden md:grid md:grid-cols-7 bg-gray-200 text-gray-700 font-semibold py-2 sm:py-3 px-2 sm:px-4 rounded-md mb-2">
+          <div className="hidden md:grid md:grid-cols-[0.4fr_1.5fr_0.6fr_1.3fr_1.5fr_0.6fr_0.6fr] bg-gray-200 text-gray-700 font-semibold py-2 sm:py-3 px-2 sm:px-4 rounded-md mb-2">
             <p className="text-sm ">#</p>
             <p className="text-sm">Patient</p>
             <p className="text-sm">Age</p>
@@ -36,8 +36,8 @@ const AllApointments = () => {
 
           {/* Content Rows */}
           <div className="divide-y divide-gray-300">
-            {appointments.map((item, index) => (
-              <div key={index} className="md:grid md:grid-cols-7 py-3 sm:py-4 px-2 sm:px-4 items-center text-gray-600 bg-white hover:bg-gray-100 rounded-md mb-2 flex flex-wrap">
+            {appointments.reverse().map((item, index) => (
+              <div key={index} className="md:grid md:grid-cols-[0.4fr_1.5fr_0.6fr_1.3fr_1.5fr_0.6fr_0.6fr] py-3 sm:py-4 px-2 sm:px-4 items-center text-gray-600 bg-white hover:bg-gray-100 rounded-md mb-2 flex flex-wrap">
                 <p className="text-sm w-full md:w-auto mb-1 md:mb-0">{index + 1}</p>
 
                 <div className="flex items-center gap-2 w-full md:w-auto mb-2 md:mb-0">
@@ -67,7 +67,10 @@ const AllApointments = () => {
                 {item.cancelled
                   ? <p className='text-red-400 text-sm font-medium'>Cancelled</p>
                   :
-                  <img onClick={()=>cancelAppointment(item._id)} className='w-10 cursor-pointer' src={assets.cancel_icon} alt="" />
+                  item.isCompleted
+                    ? <p className='text-green-500 text-sm font-medium'>Completed</p>
+                    :
+                    <img onClick={() => cancelAppointment(item._id)} className='w-10 cursor-pointer' src={assets.cancel_icon} alt="" />
                 }
 
               </div>
