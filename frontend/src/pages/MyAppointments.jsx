@@ -1,3 +1,4 @@
+import { Button } from '@/components/ui/button'
 import { AppContext } from '@/context/AppContext'
 import axios from 'axios'
 import React, { useContext, useEffect, useState } from 'react'
@@ -60,7 +61,7 @@ const MyAppointments = () => {
 
 
   return (
-    <div>
+    <div className='min-h-screen'>
       <p className='pb-3 mt-12 font-medium text-zinc-700 border-b'>My Appointments</p>
       <div className="h-auto mb-4">
         {appointments.map((item, index) => (
@@ -84,13 +85,14 @@ const MyAppointments = () => {
                   Pay online
                 </div>
               </button>} */}
-              {!item.cancelled && <button onClick={() => cancelAppointment(item._id)} className="p-[3px] relative">
+              {!item.cancelled && !item.isCompleted && <button onClick={() => cancelAppointment(item._id)} className="p-[3px] relative">
                 <div className="absolute inset-0 bg-gradient-to-r from-blue-700 to-orange-500 rounded-lg" />
                 <div className="px-8 py-2  bg-white rounded-[6px]  relative group transition duration-200 text-black hover:bg-transparent">
                   Cancel appointment
                 </div>
               </button>}
-              {item.cancelled && <div className=' text-red-400 text-center px-4 py-1 rounded-lg border border-red-400'>Appointment cancelled</div> }
+              {item.cancelled && !item.isCompleted && <div className=' text-red-400 text-center px-4 py-1 rounded-lg border border-red-400'>Appointment cancelled</div> }
+              {item.isCompleted && <button className='text-center px-4 py-1 text-green-500  rounded-lg border border-green-400'>Completed</button> }
             </div>
           </div>
         ))}
