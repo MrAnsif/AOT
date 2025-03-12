@@ -1,7 +1,9 @@
 import { Button } from '@/components/ui/button'
 import { AppContext } from '@/context/AppContext'
 import axios from 'axios'
+import { Currency } from 'lucide-react'
 import React, { useContext, useEffect, useState } from 'react'
+import { useNavigate } from 'react-router-dom'
 import { toast } from 'react-toastify'
 
 const MyAppointments = () => {
@@ -10,6 +12,8 @@ const MyAppointments = () => {
 
   const [appointments, setAppointments] = useState([])
   const months = ["Jan", "Feb", "Mar", "Apr", "May", "Jun", "Jul", "Aug", "Sep", "Oct", "Nov", "Dec"];
+
+  const navigate = useNavigate()
 
   const slotDateFormat = (slotDate) => {
     const dateArray = slotDate.split('_')
@@ -22,7 +26,7 @@ const MyAppointments = () => {
 
       if (data.succes) {
         setAppointments(data.appointments.reverse())
-        console.log("apoimt:", data.appointments)
+        console.log("appointments:", data.appointments)
       }
 
     } catch (error) {
@@ -52,6 +56,58 @@ const MyAppointments = () => {
     }
   }
 
+  const initPay = (order) => {
+
+    const options = {
+      key: import.meta.env.VITE_RAZORPAY_KEY_ID,
+      amount: order.amount,
+      currency: order.currency,
+      name: 'Appointment payment',
+      description: 'Appointment payment',
+      order_id: order.id,
+      receipt: order.receipt,
+      handler: async (response) => {
+        console.log(response)
+
+        try {
+
+          const { data } = await axios.post(backendurl + '/api/user/verifyRazorpay', response, { headers: { token } })
+
+          if (data.success) {
+            getUserAppointments()
+            navigate('/my-appointments')
+          }
+
+        } catch (error) {
+          console.log(error)
+          toast.error(error.message)
+        }
+      }
+    }
+
+    const rzp = new window.Razorpay(options)
+    rzp.open()
+
+  }
+
+
+
+  const appointmentRazorpay = async (appointmentId) => {
+    try {
+      const { data } = await axios.post(backendurl + '/api/user/payment-razorpay', { appointmentId }, { headers: { token } })
+
+      if (data.success) {
+        initPay(data.order)
+
+      }
+
+    } catch (error) {
+      console.log(error)
+      toast.error(error.message)
+    }
+
+  }
+
   useEffect(() => {
     if (token) {
       getUserAppointments()
@@ -67,7 +123,7 @@ const MyAppointments = () => {
         {appointments.map((item, index) => (
           <div className="grid grid-cols-[1fr_2fr] gap-4 sm:flex sm:gap-6 py-2 border-b" key={index}>
             <div>
-              <img className='w-32 bg-indigo-50' src={item.docData.image} alt="" />
+              <img className='w-32 bg-indigo-50 rounded-md' src={item.docData.image} alt="" />
             </div>
             <div className='flex-1 text-sm text-zinc-600'>
               <p className='text-neutral-800 font-semibold'>{item.docData.name}</p>
@@ -77,22 +133,22 @@ const MyAppointments = () => {
               <p className='text-xs'>{item.docData.address.line2}</p>
               <p className='text-sm mt-1'><span className='text-sm text-neutral-700 font-medium'>Date & Time: </span>{slotDateFormat(item.slotDate)} | {item.slotTime}</p>
             </div>
-            <div className=""></div>
             <div className="flex flex-col gap-2 justify-center">
-              {/* {!item.cancelled && <button className="p-[3px] relative">
-                <div className="absolute inset-0 bg-gradient-to-r from-blue-700 to-cyan-500 rounded-lg" />
-                <div className="px-8 py-2  bg-white rounded-[6px]  relative group transition duration-200 text-black hover:bg-transparent">
+              {!item.cancelled && item.payment && <button className='text-center px-4 py-1 text-blue-500  rounded-lg border border-blue-400'>Paid</button>}
+              {!item.cancelled && !item.isCompleted && !item.payment && <button onClick={() => appointmentRazorpay(item._id)} className="p-[2px] relative">
+                <div className="absolute inset-0 bg-gradient-to-r from-green-700 to-cyan-500 rounded-lg" />
+                <div className="px-8 py-2  bg-white rounded-[6px]  relative group transition duration-200 text-black hover:bg-transparent hover:text-white">
                   Pay online
                 </div>
-              </button>} */}
-              {!item.cancelled && !item.isCompleted && <button onClick={() => cancelAppointment(item._id)} className="p-[3px] relative">
-                <div className="absolute inset-0 bg-gradient-to-r from-blue-700 to-orange-500 rounded-lg" />
-                <div className="px-8 py-2  bg-white rounded-[6px]  relative group transition duration-200 text-black hover:bg-transparent">
+              </button>}
+              {!item.cancelled && !item.isCompleted && <button onClick={() => cancelAppointment(item._id)} className="p-[2px] relative">
+                <div className="absolute inset-0 bg-gradient-to-r from-red-700 to-orange-500 rounded-lg" />
+                <div className="px-8 py-2  bg-white rounded-[6px]  relative group transition duration-200 text-black hover:bg-transparent hover:text-white">
                   Cancel appointment
                 </div>
               </button>}
-              {item.cancelled && !item.isCompleted && <div className=' text-red-400 text-center px-4 py-1 rounded-lg border border-red-400'>Appointment cancelled</div> }
-              {item.isCompleted && <button className='text-center px-4 py-1 text-green-500  rounded-lg border border-green-400'>Completed</button> }
+              {item.cancelled && !item.isCompleted && <div className=' text-red-400 text-center px-4 py-1 rounded-lg border border-red-400'>Appointment cancelled</div>}
+              {item.isCompleted && <button className='text-center px-4 py-1 text-green-500  rounded-lg border border-green-400'>Appointment Completed</button>}
             </div>
           </div>
         ))}

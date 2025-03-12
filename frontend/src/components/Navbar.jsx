@@ -19,7 +19,7 @@ const Navbar = () => {
 
     return (
         <div className='flex justify-between items-center py-4 text-sm mb-5 border-b border-b-gray-400'>
-            <img onClick={() => navigate('/')} className='w-44 cursor-pointer' src={assets.logo} alt="" />
+            <img onClick={() => navigate('/')} className=' h-14 cursor-pointer' src={assets.logo} alt="" />
             <ul className='hidden md:flex items-start gap-6 text-base font-medium'>
                 <NavLink to={'/'} >
                     <li className='py-1 '>Home</li>
@@ -29,14 +29,14 @@ const Navbar = () => {
                     <li className='py-1 '>All Doctors</li>
                     <hr className='border-none outline-none h-0.5 bg-primary w-3/5 m-auto hidden' />
                 </NavLink>
-                <NavLink to={'/about'} >
+                {/* <NavLink to={'/about'} >
                     <li className='py-1 '>About</li>
                     <hr className='border-none outline-none h-0.5 bg-primary w-3/5 m-auto hidden' />
                 </NavLink>
                 <NavLink to={'/contact'} >
                     <li className='py-1 '>Contact</li>
                     <hr className='border-none outline-none h-0.5 bg-primary w-3/5 m-auto hidden' />
-                </NavLink>
+                </NavLink> */}
             </ul>
 
             <EmergencyCallButton />
@@ -55,7 +55,7 @@ const Navbar = () => {
                                 </div>
                             </div>
                         </div>
-                        : <button onClick={() => navigate('/login')} className='bg-primary text-white px-8 py-3 rounded-full font-light hidden md:block'>Create Account</button>
+                        : <button onClick={() => navigate('/login')} className='bg-primary text-white md:px-8 md:py-3 px-3 py-2 rounded-full font-light '>Signin</button>
                 }
                 <img onClick={() => setShowMenu(true)} className='w-6 md:hidden' src={assets.menu_icon} alt="" />
 
@@ -67,7 +67,7 @@ const Navbar = () => {
                     <ul className='flex flex-col items-center gap-2 mt-5 px-5 text-lg font-medium'>
                         <NavLink onClick={() => setShowMenu(false)} to='/'> <p className='px-4 py rounded inline-block' >Home</p></NavLink>
                         <NavLink onClick={() => setShowMenu(false)} to='/doctors'><p className='px-4 py rounded inline-block' >All Doctors</p></NavLink>
-                        <NavLink onClick={() => setShowMenu(false)} to='/blog'><p className='px-4 py rounded inline-block' >Blog Page</p></NavLink>
+                        {/* <NavLink onClick={() => setShowMenu(false)} to='/blog'><p className='px-4 py rounded inline-block' >Blog Page</p></NavLink> */}
                     </ul>
                 </div>
             </div>
