@@ -13,6 +13,7 @@ const DoctorContextProvider = (props) => {
     const [appointments, setAppointments] = useState([])
     const [dashData, setDashData] = useState(false)
     const [profileData, setProfileData] = useState(false)
+    const [userData, setUserData] = useState([])
 
     const getAppointments = async () => {
         try {
@@ -20,7 +21,6 @@ const DoctorContextProvider = (props) => {
             const { data } = await axios.get(backendurl + '/api/doctor/appointments', { headers: { dToken } })
             if (data.success) {
                 setAppointments(data.appointments.reverse())
-                console.log(data)
 
             }
             else {
@@ -111,24 +111,46 @@ const DoctorContextProvider = (props) => {
 
 
 
-   const addMedicalHistory = async (userId, condition, diagnosisDate) => {
-    try {
-        const { data } = await axios.post(backendurl + '/api/doctor/add-medical-history', 
-            { userId, condition, diagnosisDate }, 
-            { headers: { dToken } }
-        );
+    const addMedicalHistory = async (userId, condition, diagnosisDate) => {
+        try {
+            const { data } = await axios.post(backendurl + '/api/doctor/add-medical-history',
+                { userId, condition, diagnosisDate },
+                { headers: { dToken } }
+            );
 
-        if (data.success) {
-            console.log(data);
-        } else {
-            console.log(data);
+            if (data.success) {
+                console.log(data);
+            } else {
+                console.log(data);
+            }
+
+        } catch (error) {
+            console.log(error);
+            toast.error(error.message);
         }
+    };
 
-    } catch (error) {
-        console.log(error);
-        toast.error(error.message);
-    }
-};
+    const viewUserData = async (userId) => {
+        try {
+            const { data } = await axios.get(`${backendurl}/api/doctor/view-user-data`, {
+                params: { userId }, // ✅ Pass userId as a query parameter
+                headers: { dToken }
+            });
+
+            if (data.success) {
+                setUserData(data.user)
+                console.log("User Data:", data.user);
+            } else {
+                console.log(data.message);
+                toast.error(data.message);
+            }
+
+        } catch (error) {
+            console.log(error);
+            toast.error("Error fetching user data");
+        }
+    };
+
 
     const value = {
         dToken, setDToken,
@@ -139,6 +161,7 @@ const DoctorContextProvider = (props) => {
         dashData, setDashData, getDashData,
         profileData, setProfileData, getProfileData,
         addMedicalHistory,
+        viewUserData,userData,
 
 
     }

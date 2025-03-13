@@ -6,9 +6,8 @@ import { assets } from '../../assets/assets';
 import { toast } from 'react-toastify';
 import { CiCirclePlus } from "react-icons/ci";
 
-
 const DoctorAppointments = () => {
-  const { dToken, appointments, getAppointments, completeAppointment, cancelAppointment, addMedicalHistory } = useContext(DoctorContext);
+  const { dToken, appointments, getAppointments, completeAppointment, cancelAppointment, addMedicalHistory, viewUserData, userData } = useContext(DoctorContext);
   const { calculateAge, slotDateFormat } = useContext(AppContext);
 
   // State for Modal
@@ -18,6 +17,7 @@ const DoctorAppointments = () => {
   const [diagnosisDate, setDiagnosisDate] = useState("")
   const [isAddRecordOpen, setIsAddRecordOpen] = useState(false)
   const [selectedUserId, setSelectedUserId] = useState(null);
+  const [activeUserData, setActiveUserData] = useState(null);
 
   useEffect(() => {
     if (dToken) {
@@ -25,15 +25,25 @@ const DoctorAppointments = () => {
     }
   }, [dToken]);
 
+  // Set active user data when userData is updated
+  useEffect(() => {
+    if (userData && selectedUserId && userData.userId === selectedUserId) {
+      setActiveUserData(userData);
+      console.log(activeUserData)
+    }
+  }, [userData, selectedUserId]);
+
   // Open Modal with Selected Medical History
-  const openModal = (history) => {
-    setSelectedHistory(history);
-    setIsModalOpen(true);
-  };
+  const openModal = (userId) => {
+  setSelectedUserId(userId);
+  viewUserData(userId); // Fetch latest data
+  setIsModalOpen(true);
+};
 
   const openAddRecordModal = (userId) => {
     setSelectedUserId(userId);
     setIsAddRecordOpen(true);
+    viewUserData(userId);
   };
 
   const handleSubmit = async (e) => {
@@ -54,6 +64,14 @@ const DoctorAppointments = () => {
     } catch (error) {
       toast.error("Failed to add medical history");
     }
+  };
+
+  // Function to get the current user data for a specific appointment
+  const getCurrentUserData = (appointment) => {
+    if (userData && userData.userId === appointment.userId) {
+      return userData;
+    }
+    return appointment.userData;
   };
 
   return (
@@ -85,160 +103,137 @@ const DoctorAppointments = () => {
 
           {/* Table Body */}
           <div className="divide-y divide-gray-200">
-            {appointments.map((item, index) => (
-              <div key={index} className="md:grid md:grid-cols-[0.5fr_1.6fr_0.5fr_1.3fr_0.6fr_1.6fr_1.2fr_1.2fr] gap-4 p-4 hover:bg-gray-50 transition-colors">
-                <div className="hidden md:flex items-center text-gray-600">{index + 1}</div>
+            {appointments.map((item, index) => {
+              // Get the most up-to-date user data
+              const currentUserData = getCurrentUserData(item);
+              
+              return (
+                <div key={index} className="md:grid md:grid-cols-[0.5fr_1.6fr_0.5fr_1.3fr_0.6fr_1.6fr_1.2fr_1.2fr] gap-4 p-4 hover:bg-gray-50 transition-colors">
+                  <div className="hidden md:flex items-center text-gray-600">{index + 1}</div>
 
-                {/* Patient info */}
-                <div className="flex items-center font-medium text-gray-900 mb-2 md:mb-0">
-                  <img
-                    src={item.userData.image}
-                    alt={item.userData.name}
-                    className="w-10 h-10 rounded-full object-cover mr-3 border border-gray-200"
-                  />
-                  <div>
-                    <p>{item.userData.name}</p>
-                    <p className="text-sm text-gray-500 md:hidden">Age: {calculateAge(item.userData.dob)}</p>
+                  {/* Patient info - using current user data */}
+                  <div className="flex items-center font-medium text-gray-900 mb-2 md:mb-0">
+                    <img
+                      src={currentUserData.image}
+                      alt={currentUserData.name}
+                      className="w-10 h-10 rounded-full object-cover mr-3 border border-gray-200"
+                    />
+                    <div>
+                      <p>{currentUserData.name}</p>
+                      <p className="text-sm text-gray-500 md:hidden">Age: {calculateAge(currentUserData.dob)}</p>
+                    </div>
                   </div>
-                </div>
 
-                {/* Age */}
-                <div className="hidden md:flex items-center text-gray-600">
-                  {calculateAge(item.userData.dob)}
-                </div>
-
-                {/* Date & Time */}
-                <div className="flex md:block mb-2 md:mb-0">
-                  <div className="flex items-start md:items-center mr-4 md:mr-0">
-                    <Calendar size={14} className="mr-2 text-gray-400 mt-1 md:mt-0" />
-                    <span className="text-gray-600">{slotDateFormat(item.slotDate)}</span>
+                  {/* Age - using current user data */}
+                  <div className="hidden md:flex items-center text-gray-600">
+                    {calculateAge(currentUserData.dob)}
                   </div>
-                  <div className="flex items-start md:items-center mt-0 md:mt-1 text-sm text-gray-500">
-                    <Clock size={14} className="mr-2 text-gray-400 mt-1 md:mt-0" />
-                    <span>{item.slotTime}</span>
+
+                  {/* Date & Time */}
+                  <div className="flex md:block mb-2 md:mb-0">
+                    <div className="flex items-start md:items-center mr-4 md:mr-0">
+                      <Calendar size={14} className="mr-2 text-gray-400 mt-1 md:mt-0" />
+                      <span className="text-gray-600">{slotDateFormat(item.slotDate)}</span>
+                    </div>
+                    <div className="flex items-start md:items-center mt-0 md:mt-1 text-sm text-gray-500">
+                      <Clock size={14} className="mr-2 text-gray-400 mt-1 md:mt-0" />
+                      <span>{item.slotTime}</span>
+                    </div>
                   </div>
-                </div>
 
-                {/* Fees */}
-                <div className="flex items-center font-medium text-green-600 mb-2 md:mb-0">
-                  ₹{item.amount}
-                </div>
-
-                {/* Medical History */}
-                <div className="text-gray-600 mb-3 md:mb-0">
-                 
-                  <ul className="space-y-1 text-sm mb-2 ">
-                    {item.userData?.medicalHistory?.length > 0 ? (
-                      item.userData.medicalHistory.slice(0, 2).map((history, i) => (
-                        <li key={i} className="flex items-start">
-                          <span className="h-1.5 w-1.5 rounded-full bg-gray-400 mt-1.5 mr-2 flex-shrink-0"></span>
-                          <span className="line-clamp-1">
-                            {history.condition}
-                            <span className="text-gray-400 ml-1">
-                              - {new Date(history.diagnosisDate).toLocaleDateString()}
-                            </span>
-                          </span>
-                        </li>
-                      ))
-                    ) : (
-                      <li className="text-gray-400 italic">No history available</li>
-                    )}
-                    {item.userData?.medicalHistory?.length > 2 && (
-                      <li
-                        className="text-blue-500 text-xs cursor-pointer hover:underline"
-                        onClick={() => openModal(item.userData.medicalHistory)}
-                      >
-                        + {item.userData.medicalHistory.length - 2} more
-                      </li>
-                    )}
-                  </ul>
-                  <div className='cursor-pointer text-xl text-blue-950' onClick={() => openAddRecordModal(item.userId)}>
-                  <CiCirclePlus />
+                  {/* Fees */}
+                  <div className="flex items-center font-medium text-green-600 mb-2 md:mb-0">
+                    ₹{item.amount}
                   </div>
-                </div>
 
+                  {/* Medical History - using current user data */}
+                  <div className="text-gray-600 mb- md:mb-0 ">
+                    
+                    <div className="text-blue-500 text-sm cursor-pointer hover:underline pb-3"
+                          onClick={() => openModal(item.userId, currentUserData.medicalHistory)}>VIEW</div>
+                    <div className='cursor-pointer text-md text-blue-900 flex items-center gap-0.5 hover:underline ' onClick={() => openAddRecordModal(item.userId)}>
+                      <span className='text-sm'>ADD</span><CiCirclePlus />
+                    </div>
+                  </div>
 
-                <div className='grid grid-cols-2 mb-2'>
-                  <p className='block md:hidden text-zinc-600'>Type:</p>
-                  <p>{item.homeConsultancy ? 'Home Visit' : 'Clinic Visit'}</p>
-                </div>
+                  <div className='grid grid-cols-2 mb-2'>
+                    <p className='block md:hidden text-zinc-600'>Type:</p>
+                    <p>{item.homeConsultancy ? 'Home Visit' : 'Clinic Visit'}</p>
+                  </div>
 
-                <div className='grid grid-cols-2'>
-                  <p className='block md:hidden text-zinc-600'>Status:</p>
-                  {
-                    item.cancelled
-                      ?
-                      <p className='text-red-500 font-medium'>Cancelled</p>
-                      : item.isCompleted
+                  <div className='grid grid-cols-2'>
+                    <p className='block md:hidden text-zinc-600'>Status:</p>
+                    {
+                      item.cancelled
                         ?
-                        <p className='text-green-500  font-medium'>Completed</p>
-                        :
-                        <div className='flex w-10'>
-                          <img onClick={() => cancelAppointment(item._id)} src={assets.cancel_icon} alt="" className='cursor-pointer' />
-                          <img onClick={() => completeAppointment(item._id)} src={assets.tick_icon} alt="" className='cursor-pointer' />
-                        </div>
-                  }
+                        <p className='text-red-500 font-medium'>Cancelled</p>
+                        : item.isCompleted
+                          ?
+                          <p className='text-green-500  font-medium'>Completed</p>
+                          :
+                          <div className='flex w-10'>
+                            <img onClick={() => cancelAppointment(item._id)} src={assets.cancel_icon} alt="" className='cursor-pointer' />
+                            <img onClick={() => completeAppointment(item._id)} src={assets.tick_icon} alt="" className='cursor-pointer' />
+                          </div>
+                    }
+                  </div>
                 </div>
-              </div>
-            ))}
+              );
+            })}
           </div>
         </div>
       </div>
 
-
       {/* add record */}
       {isAddRecordOpen && (<div className="fixed inset-0 flex items-center justify-center backdrop-blur-md bg-[#11111123] bg-opacity-50 transition-opacity duration-300 ease-in-out" onClick={() => setIsAddRecordOpen(false)} >
         <div className="bg-white p-5 rounded-lg shadow-lg w-96 transform transition-all duration-300 ease-in-out scale-100 opacity-100 animate-modal" onClick={e => e.stopPropagation()}>
-        <div className="flex justify-between items-center">
-              <h2 className="text-lg font-semibold">Add Medical History</h2>
-              <X
-                className="cursor-pointer text-gray-500 hover:text-gray-700 transition-colors duration-200"
-                onClick={() => setIsAddRecordOpen(false)}
-              />
-            </div>
+          <div className="flex justify-between items-center">
+            <h2 className="text-lg font-semibold">Add Medical History</h2>
+            <X
+              className="cursor-pointer text-gray-500 hover:text-gray-700 transition-colors duration-200"
+              onClick={() => setIsAddRecordOpen(false)}
+            />
+          </div>
 
-            <form onSubmit={handleSubmit} className="bg-white rounded-lg">
-              <label className="block text-sm font-medium text-gray-700">Condition</label>
-              <input
-                type="text"
-                value={condition}
-                onChange={(e) => setCondition(e.target.value)}
-                placeholder="Enter condition"
-                className="w-full p-2 border rounded mb-3"
-              />
+          <form onSubmit={handleSubmit} className="bg-white rounded-lg">
+            <label className="block text-sm font-medium text-gray-700">Condition</label>
+            <input
+              type="text"
+              value={condition}
+              onChange={(e) => setCondition(e.target.value)}
+              placeholder="Enter condition"
+              className="w-full p-2 border rounded mb-3"
+            />
 
-              <label className="block text-sm font-medium text-gray-700">Diagnosis Date</label>
-              <input
-                type="date"
-                value={diagnosisDate}
-                onChange={(e) => setDiagnosisDate(e.target.value)}
-                className="w-full p-2 border rounded mb-3"
-              />
+            <label className="block text-sm font-medium text-gray-700">Diagnosis Date</label>
+            <input
+              type="date"
+              value={diagnosisDate}
+              onChange={(e) => setDiagnosisDate(e.target.value)}
+              className="w-full p-2 border rounded mb-3"
+            />
 
-              <button type="submit" className="bg-blue-600 text-white px-4 py-2 rounded">
-                Add History 
-              </button>
-            </form>
-
+            <button type="submit" className="bg-blue-900 text-white px-4 py-2 rounded">
+              Add History 
+            </button>
+          </form>
         </div>
       </div>)}
 
-
-
-      {/* Medical History Modal */}
+      {/* Medical History Modal - showing the current user data */}
       {isModalOpen && (
         <div
-          className="fixed inset-0 flex items-center justify-center backdrop-blur-md bg-[#11111123] bg-opacity-50 transition-opacity duration-300 ease-in-out"
+          className="fixed inset-0 flex items-center justify-center backdrop-blur-md bg-[#11111123] bg-opacity-50 transition-opacity duration-300 ease-in-out "
           onClick={() => setIsModalOpen(false)}
         >
           <div
-            className="bg-white p-5 rounded-lg shadow-lg w-96 transform transition-all duration-300 ease-in-out scale-100 opacity-100 animate-modal"
+            className="bg-white p-5 rounded-lg shadow-lg w-96 h-1/2 transform transition-all duration-300 ease-in-out scale-100 opacity-100 animate-modal overflow-y-scroll "
             onClick={e => e.stopPropagation()}
             style={{
               animation: 'modal-pop 0.3s ease-out forwards'
             }}
           >
-            <div className="flex justify-between items-center">
+            <div className="flex justify-between items-center sticky top-0 bg-blue-900 rounded-md px-3 text-white">
               <h2 className="text-lg font-semibold">Medical History</h2>
               <X
                 className="cursor-pointer text-gray-500 hover:text-gray-700 transition-colors duration-200"
@@ -246,7 +241,7 @@ const DoctorAppointments = () => {
               />
             </div>
             <ul className="space-y-2 mt-3">
-              {selectedHistory.map((history, i) => (
+              {userData?.medicalHistory?.map((history, i) => (
                 <li key={i} className="border-b-zinc-300 border-b pb-2">
                   <span className="font-medium">{history.condition}</span>
                   <span className="text-gray-400 ml-1">
@@ -255,8 +250,6 @@ const DoctorAppointments = () => {
                 </li>
               ))}
             </ul>
-
-            
 
             <button
               className="mt-4 px-4 py-2 bg-[#163d77] text-white rounded-md w-full hover:bg-[#122f5c] transition-colors duration-200"
