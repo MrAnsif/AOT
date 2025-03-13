@@ -2,6 +2,8 @@ import doctorModel from '../models/doctorModel.js';
 import bcrypt from 'bcrypt'
 import jwt from 'jsonwebtoken'
 import appointmentModel from '../models/appointmentModel.js';
+import userModel from '../models/userModel.js';
+
 
 const changeAvailability = async (req, res) => {
     try {
@@ -205,5 +207,37 @@ const updateDoctorProfile = async (req, res) => {
     res.json({ success: true, message: 'profile updated' })
 }
 
+// api to add medical history
+const addMedicalHistory = async (req, res) => {
+    try {
+        const { userId, condition, diagnosisDate } = req.body;
+        const doctorId = req.body.docId; 
 
-export { changeAvailability, doctorList, loginDoctor, appointmentsDoctor, appointmentCancel, appointmentCompleted, doctorDashboard, updateDoctorProfile, doctorProfile }
+        // Check if the user has an appointment with this doctor
+        const appointmentExists = await appointmentModel.findOne({ userId, docId: doctorId });
+
+        if (!appointmentExists) {
+            return res.status(403).json({ success: false, message: "Unauthorized action: You are not this patient's doctor" });
+        }
+
+        const user = await userModel.findById(userId);
+        if (!user) {
+            return res.status(404).json({ success: false, message: "User not found" });
+        }
+
+        // Add medical history
+        user.medicalHistory.push({ condition, diagnosisDate });
+        await user.save();
+
+        res.json({ success: true, message: "Medical history updated successfully", medicalHistory: user.medicalHistory });
+    } catch (error) {
+        console.error(error);
+        res.status(500).json({ success: false, message: "Server error" });
+    }
+};
+
+
+
+
+
+export { changeAvailability, doctorList, loginDoctor, appointmentsDoctor, appointmentCancel, appointmentCompleted, doctorDashboard, updateDoctorProfile, doctorProfile, addMedicalHistory }

@@ -263,8 +263,9 @@ const addMedicalHistory = async (req, res) => {
 const getMedicalHistory = async (req, res) => {
     try {
         const { userId } = req.body;
+    
 
-        const user = await userModel.findById(userId).select("medicalHistory");
+        const user = await userModel.findById(userId).select("medicalHistory")
         if (!user) {
             return res.json({ success: false, message: "User not found" });
         }
