@@ -3,14 +3,21 @@ import { DoctorContext } from '../../context/DoctorContext';
 import { Calendar, Clock, FileText, User, X } from 'lucide-react';
 import { AppContext } from '../../context/AppContext';
 import { assets } from '../../assets/assets';
+import { toast } from 'react-toastify';
+import { CiCirclePlus } from "react-icons/ci";
+
 
 const DoctorAppointments = () => {
-  const { dToken, appointments, getAppointments, completeAppointment, cancelAppointment } = useContext(DoctorContext);
+  const { dToken, appointments, getAppointments, completeAppointment, cancelAppointment, addMedicalHistory } = useContext(DoctorContext);
   const { calculateAge, slotDateFormat } = useContext(AppContext);
 
   // State for Modal
   const [isModalOpen, setIsModalOpen] = useState(false);
   const [selectedHistory, setSelectedHistory] = useState([]);
+  const [condition, setCondition] = useState("")
+  const [diagnosisDate, setDiagnosisDate] = useState("")
+  const [isAddRecordOpen, setIsAddRecordOpen] = useState(false)
+  const [selectedUserId, setSelectedUserId] = useState(null);
 
   useEffect(() => {
     if (dToken) {
@@ -22,6 +29,31 @@ const DoctorAppointments = () => {
   const openModal = (history) => {
     setSelectedHistory(history);
     setIsModalOpen(true);
+  };
+
+  const openAddRecordModal = (userId) => {
+    setSelectedUserId(userId);
+    setIsAddRecordOpen(true);
+  };
+
+  const handleSubmit = async (e) => {
+    e.preventDefault();
+
+    if (!condition || !diagnosisDate) {
+      toast.error("Please fill in all fields");
+      return;
+    }
+
+    try {
+      await addMedicalHistory(selectedUserId, condition, diagnosisDate);
+      toast.success("Medical history added successfully!");
+      setCondition("");
+      setDiagnosisDate("");
+      setIsAddRecordOpen(false);
+      getAppointments(); // Refresh appointments after adding medical history
+    } catch (error) {
+      toast.error("Failed to add medical history");
+    }
   };
 
   return (
@@ -94,8 +126,8 @@ const DoctorAppointments = () => {
 
                 {/* Medical History */}
                 <div className="text-gray-600 mb-3 md:mb-0">
-                  <p className="font-medium text-sm mb-2">Medical History:</p>
-                  <ul className="space-y-1 text-sm">
+                 
+                  <ul className="space-y-1 text-sm mb-2 ">
                     {item.userData?.medicalHistory?.length > 0 ? (
                       item.userData.medicalHistory.slice(0, 2).map((history, i) => (
                         <li key={i} className="flex items-start">
@@ -120,37 +152,78 @@ const DoctorAppointments = () => {
                       </li>
                     )}
                   </ul>
+                  <div className='cursor-pointer text-xl text-blue-950' onClick={() => openAddRecordModal(item.userId)}>
+                  <CiCirclePlus />
+                  </div>
                 </div>
 
-         
-                  <div className='grid grid-cols-2 mb-2'>
-                    <p className='block md:hidden text-zinc-600'>Type:</p>
-                    <p>{item.homeConsultancy ? 'Home Visit' : 'Clinic Visit'}</p>
-                  </div>
 
-                  <div className='grid grid-cols-2'>
-                    <p className='block md:hidden text-zinc-600'>Status:</p>
-                    {
-                      item.cancelled
+                <div className='grid grid-cols-2 mb-2'>
+                  <p className='block md:hidden text-zinc-600'>Type:</p>
+                  <p>{item.homeConsultancy ? 'Home Visit' : 'Clinic Visit'}</p>
+                </div>
+
+                <div className='grid grid-cols-2'>
+                  <p className='block md:hidden text-zinc-600'>Status:</p>
+                  {
+                    item.cancelled
+                      ?
+                      <p className='text-red-500 font-medium'>Cancelled</p>
+                      : item.isCompleted
                         ?
-                        <p className='text-red-500 font-medium'>Cancelled</p>
-                        : item.isCompleted
-                          ?
-                          <p className='text-green-500  font-medium'>Completed</p>
-                          :
-                          <div className='flex w-10'>
-                            <img onClick={() => cancelAppointment(item._id)} src={assets.cancel_icon} alt="" className='cursor-pointer' />
-                            <img onClick={() => completeAppointment(item._id)} src={assets.tick_icon} alt="" className='cursor-pointer' />
-                          </div>
-                    }
-                  </div>
+                        <p className='text-green-500  font-medium'>Completed</p>
+                        :
+                        <div className='flex w-10'>
+                          <img onClick={() => cancelAppointment(item._id)} src={assets.cancel_icon} alt="" className='cursor-pointer' />
+                          <img onClick={() => completeAppointment(item._id)} src={assets.tick_icon} alt="" className='cursor-pointer' />
+                        </div>
+                  }
                 </div>
-
-
+              </div>
             ))}
           </div>
         </div>
       </div>
+
+
+      {/* add record */}
+      {isAddRecordOpen && (<div className="fixed inset-0 flex items-center justify-center backdrop-blur-md bg-[#11111123] bg-opacity-50 transition-opacity duration-300 ease-in-out" onClick={() => setIsAddRecordOpen(false)} >
+        <div className="bg-white p-5 rounded-lg shadow-lg w-96 transform transition-all duration-300 ease-in-out scale-100 opacity-100 animate-modal" onClick={e => e.stopPropagation()}>
+        <div className="flex justify-between items-center">
+              <h2 className="text-lg font-semibold">Add Medical History</h2>
+              <X
+                className="cursor-pointer text-gray-500 hover:text-gray-700 transition-colors duration-200"
+                onClick={() => setIsAddRecordOpen(false)}
+              />
+            </div>
+
+            <form onSubmit={handleSubmit} className="bg-white rounded-lg">
+              <label className="block text-sm font-medium text-gray-700">Condition</label>
+              <input
+                type="text"
+                value={condition}
+                onChange={(e) => setCondition(e.target.value)}
+                placeholder="Enter condition"
+                className="w-full p-2 border rounded mb-3"
+              />
+
+              <label className="block text-sm font-medium text-gray-700">Diagnosis Date</label>
+              <input
+                type="date"
+                value={diagnosisDate}
+                onChange={(e) => setDiagnosisDate(e.target.value)}
+                className="w-full p-2 border rounded mb-3"
+              />
+
+              <button type="submit" className="bg-blue-600 text-white px-4 py-2 rounded">
+                Add History 
+              </button>
+            </form>
+
+        </div>
+      </div>)}
+
+
 
       {/* Medical History Modal */}
       {isModalOpen && (
@@ -182,6 +255,9 @@ const DoctorAppointments = () => {
                 </li>
               ))}
             </ul>
+
+            
+
             <button
               className="mt-4 px-4 py-2 bg-[#163d77] text-white rounded-md w-full hover:bg-[#122f5c] transition-colors duration-200"
               onClick={() => setIsModalOpen(false)}

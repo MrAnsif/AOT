@@ -20,6 +20,7 @@ const DoctorContextProvider = (props) => {
             const { data } = await axios.get(backendurl + '/api/doctor/appointments', { headers: { dToken } })
             if (data.success) {
                 setAppointments(data.appointments.reverse())
+                console.log(data)
 
             }
             else {
@@ -97,7 +98,7 @@ const DoctorContextProvider = (props) => {
 
             const { data } = await axios.get(backendurl + '/api/doctor/profile', { headers: { dToken } })
 
-            if(data.success){
+            if (data.success) {
                 setProfileData(data.profileData)
                 console.log(data.profileData)
             }
@@ -108,6 +109,27 @@ const DoctorContextProvider = (props) => {
         }
     }
 
+
+
+   const addMedicalHistory = async (userId, condition, diagnosisDate) => {
+    try {
+        const { data } = await axios.post(backendurl + '/api/doctor/add-medical-history', 
+            { userId, condition, diagnosisDate }, 
+            { headers: { dToken } }
+        );
+
+        if (data.success) {
+            console.log(data);
+        } else {
+            console.log(data);
+        }
+
+    } catch (error) {
+        console.log(error);
+        toast.error(error.message);
+    }
+};
+
     const value = {
         dToken, setDToken,
         backendurl,
@@ -116,6 +138,7 @@ const DoctorContextProvider = (props) => {
         completeAppointment, cancelAppointment,
         dashData, setDashData, getDashData,
         profileData, setProfileData, getProfileData,
+        addMedicalHistory,
 
 
     }
