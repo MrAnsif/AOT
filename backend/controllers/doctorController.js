@@ -211,7 +211,7 @@ const updateDoctorProfile = async (req, res) => {
 const addMedicalHistory = async (req, res) => {
     try {
         const { userId, condition, diagnosisDate } = req.body;
-        const doctorId = req.body.docId; 
+        const doctorId = req.body.docId;
 
         // Check if the user has an appointment with this doctor
         const appointmentExists = await appointmentModel.findOne({ userId, docId: doctorId });
@@ -236,8 +236,29 @@ const addMedicalHistory = async (req, res) => {
     }
 };
 
+// api to get user data in doc panel
+const viewUserData = async (req, res) => {
+    try {
+        const { userId } = req.query; // ✅ Get userId from query params
+        if (!userId) {
+            return res.json({ success: false, message: "User ID is required" });
+        }
+
+        const user = await userModel.findById(userId).select('-password');
+
+        if (!user) {
+            return res.json({ success: false, message: "User not found" });
+        }
+
+        res.json({ success: true, user });
+
+    } catch (error) {
+        console.error(error);
+        res.json({ success: false, message: "Failed to fetch user details" });
+    }
+};
 
 
 
 
-export { changeAvailability, doctorList, loginDoctor, appointmentsDoctor, appointmentCancel, appointmentCompleted, doctorDashboard, updateDoctorProfile, doctorProfile, addMedicalHistory }
+export { changeAvailability, doctorList, loginDoctor, appointmentsDoctor, appointmentCancel, appointmentCompleted, doctorDashboard, updateDoctorProfile, doctorProfile, addMedicalHistory, viewUserData }
