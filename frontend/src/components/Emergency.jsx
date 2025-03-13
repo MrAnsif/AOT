@@ -10,7 +10,6 @@ const EmergencyCallButton = () => {
   const apiKey = import.meta.env.VITE_GOMAP_APIKEY_2 // Replace with your API key
   const dropdownRef = useRef(null);
 
-  console.log(apiKey)
 
   // Auto-close dropdown when clicking outside
   useEffect(() => {
@@ -45,7 +44,7 @@ const EmergencyCallButton = () => {
           const nearbyResponse = await axios.get(
             `https://maps.gomaps.pro/maps/api/place/nearbysearch/json?location=${lat},${lng}&radius=5000&type=hospital&key=${apiKey}`
           );
-          console.log(nearbyResponse.data);
+          console.log(nearbyResponse.data.results);
 
 
           if (!nearbyResponse.data.results || nearbyResponse.data.results.length === 0) {
