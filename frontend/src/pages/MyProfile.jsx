@@ -8,10 +8,11 @@ import { toast } from 'react-toastify'
 const MyProfile = () => {
 
 
-  const { userData, setUserData, token, backendurl, loadUserProfileData } = useContext(AppContext)
+  const { userData, setUserData, token, backendurl, loadUserProfileData, getMedicalHistory } = useContext(AppContext)
 
   const [isEdit, setIsEdit] = useState(false)
   const [image, setImage] = useState(false)
+
 
   const updateUserProfileData = async () => {
 
@@ -119,6 +120,21 @@ const MyProfile = () => {
           }
         </div>
       </div>
+
+      <p className="text-neutral-500 underline mt-3">MEDICAL RECORD</p>
+      <div className="p-4 bg-white rounded-lg shadow-md border border-gray-200">
+        <div className="space-y-2">
+          {
+            userData.medicalHistory.map((item, index) => (
+              <div key={index} className="flex justify-between items-center p-2 hover:bg-gray-50 rounded">
+                <span className="font-medium text-gray-800">{item.condition}</span>
+                <span className="text-sm text-gray-500">{new Date(item.diagnosisDate).toLocaleDateString()}</span>
+              </div>
+            ))
+          }
+        </div>
+      </div>
+
       <div className='my-6 '>
         {
           isEdit ?

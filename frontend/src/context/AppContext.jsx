@@ -36,8 +36,25 @@ const AppContextProvider = (props) => {
             const { data } = await axios.get(backendurl + '/api/user/get-profile', { headers: { token } })
             if (data.success) {
                 setUserData(data.userData)
+                console.log(data.userData)
             }
             else {
+                toast.error(data.message)
+            }
+
+        } catch (error) {
+            console.log(error)
+            toast.error(error.message)
+        }
+    }
+
+    const getMedicalHistory = async () => {
+        try {
+
+            const { data } = await axios.get(backendurl + '/api/user/getMedicalHistory', { headers: { token } })
+            if (data.success) {
+                console.log(data.success)
+            } else {
                 toast.error(data.message)
             }
 
@@ -55,6 +72,7 @@ const AppContextProvider = (props) => {
         backendurl,
         userData, setUserData,
         loadUserProfileData,
+        getMedicalHistory,
     }
 
 
@@ -63,15 +81,15 @@ const AppContextProvider = (props) => {
     }, [])
 
     useEffect(() => {
-        if (token){
+        if (token) {
             loadUserProfileData()
         }
-        else{
+        else {
             setUserData(false)
         }
 
     }, [token])
-    
+
 
 
 
