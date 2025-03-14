@@ -73,7 +73,7 @@ const Chatbot = () => {
 
           <div className="flex mt-2 space-x-2 text-white">
             <button onClick={() => sendMessage("available doctors")} className="p-2 bg-blue-900 rounded-md">Available Doctors</button>
-            <button onClick={() => sendMessage("Give me healthcare tips")} className="p-2 bg-blue-900 rounded-md">Give me simple healthcare tips</button>
+            <button onClick={() => sendMessage("Give me simple healthcare tips")} className="p-2 bg-blue-900 rounded-md">Give me simple healthcare tips</button>
           </div>
         </>
       )}
