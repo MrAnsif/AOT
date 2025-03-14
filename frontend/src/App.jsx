@@ -10,6 +10,7 @@ import MyAppointments from './pages/MyAppointments'
 import Appointment from './pages/Appointment'
 import Navbar from './components/Navbar'
 import Footer from './components/Footer'
+import Chatbot from './components/Chatbot'
 import { toast, ToastContainer } from 'react-toastify'
 
 
@@ -17,8 +18,12 @@ const App = () => {
   return (
     <div className='bg-[#EFF5EE]' >
       <div className='mx-4 sm:mx-[10%] '>
-        <ToastContainer/>
+        <ToastContainer />
         <Navbar />
+        <div className='md:right-3 right-5 fixed z-50 bottom-5 px-2'>
+          <Chatbot />
+        </div>
+
         <Routes>
           <Route path='/' element={<Home />} />
           <Route path='/doctors' element={<Doctors />} />

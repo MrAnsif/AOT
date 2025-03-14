@@ -43,6 +43,7 @@ import General_physician1 from './General_physician.jpg'
 import Gynecologist1 from './Gynecologist.jpg'
 import Neurologist1 from './Neurologist.jpg'
 import Pediatricians1 from './Pediatricians.jpg'
+import chatbot_icon from './chatbot_icon.png'
 
 
 export const assets = {
@@ -62,7 +63,8 @@ export const assets = {
     dropdown_icon,
     upload_icon,
     stripe_logo,
-    razorpay_logo
+    razorpay_logo,
+    chatbot_icon
 }
 
 export const specialityData = [
