@@ -35,7 +35,7 @@ const Chatbot = () => {
   }, [messages, isChatOpen]);
 
   return (
-    <div className="w-full max-w-md mx-auto p-3 border rounded-lg shadow-md backdrop-blur-md bg-[#a7a7a732]">
+    <div className=" md:max-w-md max-w-[90.5vw] mx-auto p-3 border rounded-lg shadow-md backdrop-blur-md bg-[#a7a7a732] md:right-3 right-5 fixed z-50 bottom-5 px-2">
       <div className="flex justify-between text-xl text-gray-700 rounded-full">
         <img className="cursor-pointer h-12 w-12 object-cover" src={assets.chatbot_icon} onClick={() => setIsChatOpen(true)} alt="" />
         {isChatOpen && (<RxCross2 className="cursor-pointer" onClick={() => setIsChatOpen(false)} />)}
@@ -73,7 +73,7 @@ const Chatbot = () => {
 
           <div className="flex mt-2 space-x-2 text-white">
             <button onClick={() => sendMessage("available doctors")} className="p-2 bg-blue-900 rounded-md">Available Doctors</button>
-            <button onClick={() => sendMessage("Give me simple healthcare tips")} className="p-2 bg-blue-900 rounded-md">Give me simple healthcare tips</button>
+            <button onClick={() => sendMessage("Give me healthcare tips")} className="p-2 bg-blue-900 rounded-md">Give me simple healthcare tips</button>
           </div>
         </>
       )}

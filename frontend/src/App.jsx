@@ -20,7 +20,7 @@ const App = () => {
       <div className='mx-4 sm:mx-[10%] '>
         <ToastContainer />
         <Navbar />
-        <div className='md:right-3 right-5 fixed z-50 bottom-5 px-2'>
+        <div className=''>
           <Chatbot />
         </div>
 
