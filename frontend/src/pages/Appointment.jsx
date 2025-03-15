@@ -9,6 +9,7 @@ import { InteractiveHoverButton } from '@/components/ui/interactive-hover-button
 import { toast } from 'react-toastify'
 import axios from 'axios'
 import styled from 'styled-components'
+import { ShimmerButton } from '@/components/ui/shimmer-button'
 
 
 
@@ -165,7 +166,7 @@ const Appointment = () => {
           </p>
           <div className='flex items-center gap-4 text-gray-600 text-sm mt-1 '>
             <p>{docInfo.degree} - {docInfo.speciality}</p>
-            <ShinyButton className='cursor-default' >{docInfo.experience}</ShinyButton>
+            <button className='cursor-default' >Experience - {docInfo.experience}</button>
           </div>
           {/* =======doc about======== */}
           <div>

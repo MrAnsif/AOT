@@ -138,9 +138,9 @@ const MyProfile = () => {
       <div className='my-6 '>
         {
           isEdit ?
-            <ShinyButton className='font-black px-3 ' onClick={updateUserProfileData}>Save</ShinyButton>
+            <ShinyButton className='font-semibold px-5 py-2 bg-[#163d77] rounded-full ' onClick={updateUserProfileData}>Save</ShinyButton>
             :
-            <ShinyButton className='font-black px-3 ' onClick={() => setIsEdit(true)}>Edit</ShinyButton>
+            <ShinyButton className='font-semibold px-5 py-2 bg-[#163d77] rounded-full' onClick={() => setIsEdit(true)}>Edit</ShinyButton>
         }
       </div>
     </div>

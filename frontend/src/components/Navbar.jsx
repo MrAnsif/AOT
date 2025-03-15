@@ -3,11 +3,13 @@ import { assets } from '../assets/assets'
 import { NavLink, useNavigate } from 'react-router-dom'
 import EmergencyCallButton from './Emergency'
 import { AppContext } from '@/context/AppContext'
+import GooeyNav from './GooeyNav/GooeyNav'
+
 const Navbar = () => {
 
     const navigate = useNavigate()
 
-    const {token, setToken, userData} = useContext(AppContext)
+    const { token, setToken, userData } = useContext(AppContext)
 
     const [showMenu, setShowMenu] = useState(false)
     // const [token, setToken] = useState(true)
@@ -17,26 +19,37 @@ const Navbar = () => {
         localStorage.removeItem('token')
     }
 
+    const items = [
+        { label: "Home", to: "/" },
+        { label: "All Doctors", to: "/doctors" }
+    ];
+
     return (
         <div className='flex justify-between items-center py-4 text-sm mb-5 border-b border-b-gray-400'>
             <img onClick={() => navigate('/')} className=' h-14 cursor-pointer' src={assets.logo} alt="" />
             <ul className='hidden md:flex items-start gap-6 text-base font-medium'>
-                <NavLink to={'/'} >
+                {/* <NavLink to={'/'} >
                     <li className='py-1 '>Home</li>
                     <hr className='border-none outline-none h-0.5 bg-primary w-3/5 m-auto hidden' />
                 </NavLink>
                 <NavLink to={'/doctors'} >
                     <li className='py-1 '>All Doctors</li>
                     <hr className='border-none outline-none h-0.5 bg-primary w-3/5 m-auto hidden' />
-                </NavLink>
-                {/* <NavLink to={'/about'} >
-                    <li className='py-1 '>About</li>
-                    <hr className='border-none outline-none h-0.5 bg-primary w-3/5 m-auto hidden' />
-                </NavLink>
-                <NavLink to={'/contact'} >
-                    <li className='py-1 '>Contact</li>
-                    <hr className='border-none outline-none h-0.5 bg-primary w-3/5 m-auto hidden' />
                 </NavLink> */}
+
+                <div style={{ height: '', position: 'relative' }}>
+                    <GooeyNav
+                        items={items}
+                        animationTime={600}
+                        particleCount={9}
+                        minDistance={20}
+                        maxDistance={42}
+                        maxRotate={75}
+                        colors={[1, 2, 3, 1, 2, 3, 1, 4]}
+                        timeVariance={300}
+                    />
+                </div>
+
             </ul>
 
             <EmergencyCallButton />

@@ -1,3 +1,5 @@
+import StyledButton from '@/components/StyledButton'
+import StyledPayButton from '@/components/StyledPayButton'
 import { Button } from '@/components/ui/button'
 import { AppContext } from '@/context/AppContext'
 import axios from 'axios'
@@ -133,22 +135,25 @@ const MyAppointments = () => {
               <p className='text-xs'>{item.docData.address.line2}</p>
               <p className='text-sm mt-1'><span className='text-sm text-neutral-700 font-medium'>Date & Time: </span>{slotDateFormat(item.slotDate)} | {item.slotTime}</p>
             </div>
-            <div className="flex flex-col gap-2 justify-center">
+            <div className="flex flex-col gap-2 justify-center ">
               {!item.cancelled && item.payment && <button className='text-center px-4 py-1 text-blue-500  rounded-lg border border-blue-400'>Paid</button>}
-              {!item.cancelled && !item.isCompleted && !item.payment && <button onClick={() => appointmentRazorpay(item._id)} className="p-[2px] relative">
-                <div className="absolute inset-0 bg-gradient-to-r from-green-700 to-cyan-500 rounded-lg" />
-                <div className="px-8 py-2  bg-white rounded-[6px]  relative group transition duration-200 text-black hover:bg-transparent hover:text-white">
-                  Pay online
-                </div>
-              </button>}
-              {!item.cancelled && !item.isCompleted && <button onClick={() => cancelAppointment(item._id)} className="p-[2px] relative">
-                <div className="absolute inset-0 bg-gradient-to-r from-red-700 to-orange-500 rounded-lg" />
-                <div className="px-8 py-2  bg-white rounded-[6px]  relative group transition duration-200 text-black hover:bg-transparent hover:text-white">
-                  Cancel appointment
-                </div>
-              </button>}
-              {item.cancelled && !item.isCompleted && <div className=' text-red-400 text-center px-4 py-1 rounded-lg border border-red-400'>Appointment cancelled</div>}
-              {item.isCompleted && <button className='text-center px-4 py-1 text-green-500  rounded-lg border border-green-400'>Appointment Completed</button>}
+
+              {!item.cancelled && !item.isCompleted && !item.payment &&
+              <p onClick={() => appointmentRazorpay(item._id)}>
+
+                  <StyledPayButton className="p-[2px] ">
+                  </StyledPayButton>
+              </p>
+              }
+
+              {!item.cancelled && !item.isCompleted &&
+                <p onClick={() => cancelAppointment(item._id)}>
+                  <StyledButton className="">
+                  </StyledButton>
+                </p>
+              }
+              {item.cancelled && !item.isCompleted && <div className=' text-red-400 text-center px-4 py-1 rounded-lg border border-red-400'>Cancelled</div>}
+              {item.isCompleted && <button className='text-center px-4 py-1 text-green-500  rounded-lg border border-green-400'>Completed</button>}
             </div>
           </div>
         ))}
