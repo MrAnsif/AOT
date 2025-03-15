@@ -38,17 +38,18 @@ const AllApointments = () => {
           <div className="divide-y divide-gray-300">
             {appointments.reverse().map((item, index) => (
               <div key={index} className="md:grid md:grid-cols-[0.4fr_1.5fr_0.6fr_1.3fr_1.5fr_0.6fr_0.6fr] py-3 sm:py-4 px-2 sm:px-4 items-center text-gray-600 bg-white hover:bg-gray-100 rounded-md mb-2 flex flex-wrap">
+                { item.userData &&
+                  <>
                 <p className="text-sm w-full md:w-auto mb-1 md:mb-0">{index + 1}</p>
+                    <div className="flex items-center gap-2 w-full md:w-auto mb-2 md:mb-0">
+                      <img src={item.userData.image} alt="" className="w-8 h-8 rounded-full object-cover bg-gray-200" />
+                      <p className="font-medium text-sm">{item.userData.name}</p>
+                    </div>
 
-                <div className="flex items-center gap-2 w-full md:w-auto mb-2 md:mb-0">
-                  <img src={item.userData.image} alt="" className="w-8 h-8 rounded-full object-cover bg-gray-200" />
-                  <p className="font-medium text-sm">{item.userData.name}</p>
-                </div>
-
-                <p className="text-sm w-full md:w-auto mb-1 md:mb-0">
-                  <span className="md:hidden text-xs text-gray-500">Age: </span>
-                  {calculateAge(item.userData.dob)}
-                </p>
+                    <p className="text-sm w-full md:w-auto mb-1 md:mb-0">
+                      <span className="md:hidden text-xs text-gray-500">Age: </span>
+                      {calculateAge(item.userData.dob)}
+                    </p>
 
                 <div className="w-full md:w-auto mb-2 md:mb-0">
                   <p className="text-sm">{slotDateFormat(item.slotDate)}</p>
@@ -73,6 +74,8 @@ const AllApointments = () => {
                     <img onClick={() => cancelAppointment(item._id)} className='w-10 cursor-pointer' src={assets.cancel_icon} alt="" />
                 }
 
+</>
+}
               </div>
             ))}
           </div>
