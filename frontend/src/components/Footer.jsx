@@ -15,15 +15,15 @@ const Footer = () => {
                     <h1 className='text-2xl bg-gradient-to-r from-white to-[#565656] bg-clip-text tracking-tight'>AOT – Your Health Clock, Perfectly Synced.</h1>
                 </div>
 
-                <footer className='w-screen bg-[#EFF5EE] py-4 text-black h-auto '>
+                <footer className='w-screen  py-4 text-white h-auto '>
                     <div className='flex flex-col justify-between p-2 gap-14 sm:grid grid-cols-[3fr_1fr_1fr] my-1 text-sm'>
                         {/* ========left======== */}
                         <div className="">
-                            <img className='mb-5 w-40' src={assets.logo} alt="" />
+                            <img className='mb-5 h-20 bg-[#EFF5EE] rounded-lg' src={assets.logo} alt="" />
                             <p className='w-full md:w-2/3 '>Your health is our priority. Book appointments with trusted doctors, access personalized care, and manage your medical needs conveniently, all in one place. </p>
                         </div>
                         {/* =======centre======== */}
-                        <div className="">
+                        {/* <div className="">
                             <p className='text-xl font-medium mb-3'>COMPANY</p>
                             <ul className='flex flex-col gap-1'>
                                 <li>Home</li>
@@ -31,7 +31,7 @@ const Footer = () => {
                                 <li>Contact us</li>
                                 <li>Privacy policy</li>
                             </ul>
-                        </div>
+                        </div> */}
                         {/* =====right======== */}
                         <div className="">
                             <p className='text-xl font-medium mb-3'>GET IN TOUCH</p>
