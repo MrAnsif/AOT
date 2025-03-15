@@ -59,12 +59,12 @@ const Doctors = () => {
                   showTooltip={true}
                   displayOverlayContent={true}
                   overlayContent={
-                    <div className="p-4" >
+                    <div className="mx-2 p-1 rounded-lg" >
                       <div className={`flex items-center gap-2 text-sm text-center ${item.available ? 'text-green-500' : 'text-gray-500' } `}>
                         <p className={`w-2 h-2 ${item.available ? 'bg-green-500' : 'bg-gray-500' }  rounded-full`}></p><p>{item.available ? 'Avilable': 'Not Available'}</p>
                       </div>
                       <p className='text-gray-900 text-lg font-medium '>{item.name}</p>
-                      <p className='text-gray-600 text-sm'>{item.speciality}</p>
+                      <p className='text-gray-800 text-sm'>{item.speciality}</p>
                     </div>
                   }
                 />
