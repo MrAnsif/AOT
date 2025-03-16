@@ -10,6 +10,8 @@ import { toast } from 'react-toastify'
 import axios from 'axios'
 import styled from 'styled-components'
 import { ShimmerButton } from '@/components/ui/shimmer-button'
+import { MdAddLocation } from "react-icons/md";
+import { MdInfo } from "react-icons/md";
 
 
 
@@ -153,6 +155,7 @@ const Appointment = () => {
   return docInfo && (
     <div className=''>
       {/* =======doc details========== */}
+      {(console.log(docInfo))}
       <div className="flex flex-col sm:flex-row gap-4">
         <div className="">
           <img className='bg-primary w-full sm:max-w-72 rounded-lg' src={docInfo.image} alt="" />
@@ -164,17 +167,24 @@ const Appointment = () => {
             {docInfo.name}
             <img className='w-5' src={assets.verified_icon} alt="" />
           </p>
-          <div className='flex items-center gap-4 text-gray-600 text-sm mt-1 '>
+          <div className='flex items-center gap-4 text-gray-600 text-sm mt-1 ml-2 '>
             <p>{docInfo.degree} - {docInfo.speciality}</p>
             <button className='cursor-default' >Experience - {docInfo.experience}</button>
           </div>
           {/* =======doc about======== */}
           <div>
-            <p className='flex gap-1 items-center text-sm font-medium text-gray-900 mt-3' >About <img src={assets.info_icon} alt="" /></p>
-            <p className='text-sm text-gray-700 max-w-[700px] mt-1' >{docInfo.about}</p>
+            <p className='flex gap-1 items-center text-sm font-medium text-gray-900 mt-3 ' >About <MdInfo /></p>
+            <p className='text-sm text-gray-700 max-w-[700px] mt-1 ml-2' >{docInfo.about}</p>
+          </div>
+          <div className=''>
+            <p className='flex gap-1 items-center text-sm font-medium text-gray-900 mt-3 ' >Address<MdAddLocation /></p>
+            <div className='text-sm text-gray-700 max-w-[700px] mt-1 ml-2'>
+              <p>{docInfo.address.line1}</p>
+              <p>{docInfo.address.line2}</p>
+            </div>
           </div>
           <p className='text-gray-700  font-medium mt-4 '>Appointment fee:
-            <span className='text-gray-800'>{currencySymbol}{docInfo.fees}</span>
+            <span className='text-gray-800'> {currencySymbol}{docInfo.fees}</span>
           </p>
         </div>
       </div>
