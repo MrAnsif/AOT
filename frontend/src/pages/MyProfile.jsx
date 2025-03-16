@@ -1,4 +1,5 @@
 import { assets } from '@/assets/assets'
+import AnimatedList from '@/components/AnimatedList/AnimatedList'
 import { ShinyButton } from '@/components/ui/shiny-button'
 import { AppContext } from '@/context/AppContext'
 import axios from 'axios'
@@ -10,8 +11,11 @@ const MyProfile = () => {
 
   const { userData, setUserData, token, backendurl, loadUserProfileData, getMedicalHistory } = useContext(AppContext)
 
+  const items = ['Item 1', 'Item 2', 'Item 3', 'Item 4', 'Item 5', 'Item 6', 'Item 7', 'Item 8', 'Item 9', 'Item 10'];
+
   const [isEdit, setIsEdit] = useState(false)
   const [image, setImage] = useState(false)
+  const [itemss, setItemss] = useState([])
 
 
   const updateUserProfileData = async () => {
@@ -122,8 +126,8 @@ const MyProfile = () => {
       </div>
 
       <p className="text-neutral-500 underline mt-3">MEDICAL RECORD</p>
-      <div className="p-4 bg-white rounded-lg shadow-md border border-gray-200">
-        <div className="space-y-2">
+      <div className="p-4 bg-white rounded-lg shadow-md border border-gray-200 md:min-w-96 md:w-fit">
+        <div className="space-y-2 h-40 overflow-y-scroll  ">
           {
             userData.medicalHistory.map((item, index) => (
               <div key={index} className="flex justify-between items-center p-2 hover:bg-gray-50 rounded">
