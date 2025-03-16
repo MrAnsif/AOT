@@ -35,10 +35,10 @@ const DoctorAppointments = () => {
 
   // Open Modal with Selected Medical History
   const openModal = (userId) => {
-  setSelectedUserId(userId);
-  viewUserData(userId); // Fetch latest data
-  setIsModalOpen(true);
-};
+    setSelectedUserId(userId);
+    viewUserData(userId); // Fetch latest data
+    setIsModalOpen(true);
+  };
 
   const openAddRecordModal = (userId) => {
     setSelectedUserId(userId);
@@ -106,7 +106,7 @@ const DoctorAppointments = () => {
             {appointments.map((item, index) => {
               // Get the most up-to-date user data
               const currentUserData = getCurrentUserData(item);
-              
+
               return (
                 <div key={index} className="md:grid md:grid-cols-[0.5fr_1.6fr_0.5fr_1.3fr_0.6fr_1.6fr_1.2fr_1.2fr] gap-4 p-4 hover:bg-gray-50 transition-colors">
                   <div className="hidden md:flex items-center text-gray-600">{index + 1}</div>
@@ -148,9 +148,9 @@ const DoctorAppointments = () => {
 
                   {/* Medical History - using current user data */}
                   <div className="text-gray-600 mb- md:mb-0 ">
-                    
+
                     <div className="text-blue-500 text-sm cursor-pointer hover:underline pb-3"
-                          onClick={() => openModal(item.userId, currentUserData.medicalHistory)}>VIEW</div>
+                      onClick={() => openModal(item.userId, currentUserData.medicalHistory)}>VIEW</div>
                     <div className='cursor-pointer text-md text-blue-900 flex items-center gap-0.5 hover:underline ' onClick={() => openAddRecordModal(item.userId)}>
                       <span className='text-sm'>ADD</span><CiCirclePlus />
                     </div>
@@ -185,10 +185,10 @@ const DoctorAppointments = () => {
       </div>
 
       {/* add record */}
-      {isAddRecordOpen && (<div className="fixed inset-0 flex items-center justify-center backdrop-blur-md bg-[#11111123] bg-opacity-50 transition-opacity duration-300 ease-in-out" onClick={() => setIsAddRecordOpen(false)} >
-        <div className="bg-white p-5 rounded-lg shadow-lg w-96 transform transition-all duration-300 ease-in-out scale-100 opacity-100 animate-modal" onClick={e => e.stopPropagation()}>
+      {isAddRecordOpen && (<div className="fixed inset-0 flex  items-center justify-center backdrop-blur-md bg-[#11111123] bg-opacity-50 transition-opacity duration-300 ease-in-out" onClick={() => setIsAddRecordOpen(false)} >
+        <div className="bg-white p-5 rounded-lg shadow-lg w-96 mx-4 transform transition-all duration-300 ease-in-out scale-100 opacity-100 animate-modal" onClick={e => e.stopPropagation()}>
           <div className="flex justify-between items-center">
-            <h2 className="text-lg font-semibold">Add Medical History</h2>
+            <h2 className="text-lg font-semibold  text-gray-800">Add Medical History</h2>
             <X
               className="cursor-pointer text-gray-500 hover:text-gray-700 transition-colors duration-200"
               onClick={() => setIsAddRecordOpen(false)}
@@ -213,8 +213,8 @@ const DoctorAppointments = () => {
               className="w-full p-2 border rounded mb-3"
             />
 
-            <button type="submit" className="bg-blue-900 text-white px-4 py-2 rounded">
-              Add History 
+            <button type="submit" className="bg-[#163d77] text-white px-4 py-2 rounded-full">
+              Add History
             </button>
           </form>
         </div>
@@ -223,24 +223,24 @@ const DoctorAppointments = () => {
       {/* Medical History Modal - showing the current user data */}
       {isModalOpen && (
         <div
-          className="fixed inset-0 flex items-center justify-center backdrop-blur-md bg-[#11111123] bg-opacity-50 transition-opacity duration-300 ease-in-out "
+          className="fixed inset-0 flex items-center justify-center backdrop-blur-md bg-[#11111169] bg-opacity-50 transition-opacity duration-300 ease-in-out "
           onClick={() => setIsModalOpen(false)}
         >
           <div
-            className="bg-white p-5 rounded-lg shadow-lg w-96 h-1/2 transform transition-all duration-300 ease-in-out scale-100 opacity-100 animate-modal overflow-y-scroll "
+            className="bg-white rounded-lg shadow-lg w-96 mx-4 h-1/2 transform transition-all duration-300 ease-in-out scale-100 opacity-100 animate-modal overflow-y-scroll "
             onClick={e => e.stopPropagation()}
             style={{
               animation: 'modal-pop 0.3s ease-out forwards'
             }}
           >
-            <div className="flex justify-between items-center sticky top-0 bg-blue-900 rounded-md px-3 text-white">
+            <div className="flex justify-between items-center sticky top-0 bg-white px-4 py-3  text-gray-800">
               <h2 className="text-lg font-semibold">Medical History</h2>
               <X
                 className="cursor-pointer text-gray-500 hover:text-gray-700 transition-colors duration-200"
                 onClick={() => setIsModalOpen(false)}
               />
             </div>
-            <ul className="space-y-2 mt-3">
+            <ul className="space-y-2  px-4">
               {userData?.medicalHistory?.map((history, i) => (
                 <li key={i} className="border-b-zinc-300 border-b pb-2">
                   <span className="font-medium">{history.condition}</span>
@@ -250,13 +250,6 @@ const DoctorAppointments = () => {
                 </li>
               ))}
             </ul>
-
-            <button
-              className="mt-4 px-4 py-2 bg-[#163d77] text-white rounded-md w-full hover:bg-[#122f5c] transition-colors duration-200"
-              onClick={() => setIsModalOpen(false)}
-            >
-              Close
-            </button>
           </div>
         </div>
       )}
