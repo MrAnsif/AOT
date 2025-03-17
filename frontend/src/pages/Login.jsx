@@ -1,5 +1,3 @@
-
-import { ShimmerButton } from '@/components/ui/shimmer-button'
 import { AppContext } from '@/context/AppContext'
 import React, { useContext, useEffect, useState } from 'react'
 import axios from 'axios'
@@ -80,11 +78,7 @@ const Login = () => {
           <p>Full Password</p>
           <input className='border border-zinc-300 rounded w-full p-2 mt-1 `' type="password" onChange={(e) => setPassword(e.target.value)} value={password} required />
         </div>
-        {/* <ShimmerButton type='submit' className="shadow-2xl">
-          <span className="whitespace-pre-wrap text-center text-sm font-medium leading-none tracking-tight text-white dark:from-white dark:to-slate-900/10 lg:text-base">
-            {state === 'Sign Up' ? "Create Account" : "Login"}
-          </span>
-        </ShimmerButton> */}
+        
         <button type='submit' className="whitespace-pre-wrap text-center text-sm font-medium leading-none tracking-tight bg-[#0a48a8] px-3 py-1 rounded-full text-white  dark:from-white dark:to-slate-900/10 lg:text-base">{state === 'Sign Up' ? "Create Account" : "Login"}</button>
         {
           state === 'Sign Up' ?
