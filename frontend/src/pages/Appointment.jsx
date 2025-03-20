@@ -2,14 +2,12 @@ import { assets } from '@/assets/assets'
 import { AppContext } from '@/context/AppContext'
 import React, { useContext, useEffect, useState } from 'react'
 import { useNavigate, useParams } from 'react-router-dom'
-import { ShinyButton } from '@/components/ui/shiny-button'
 import { MagicCard } from '@/components/ui/magic-card'
 import { useTheme } from "next-themes";
 import { InteractiveHoverButton } from '@/components/ui/interactive-hover-button'
 import { toast } from 'react-toastify'
 import axios from 'axios'
 import styled from 'styled-components'
-import { ShimmerButton } from '@/components/ui/shimmer-button'
 import { MdAddLocation } from "react-icons/md";
 import { MdInfo } from "react-icons/md";
 
