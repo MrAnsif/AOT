@@ -39,17 +39,17 @@ const Appointment = () => {
 
   const getAvailableSlots = async () => {
     let today = new Date();
-    let slotsForWeek = []; // Temporary array to store all slots for 7 days
+    let slotsForWeek = []; 
 
     for (let i = 0; i < 7; i++) {
       let currentDate = new Date(today);
       currentDate.setDate(today.getDate() + i);
 
-      // Set the end time for each day
+
       let endTime = new Date(currentDate);
       endTime.setHours(21, 0, 0, 0);
 
-      // Adjust starting time for the first day
+      
       if (i === 0) {
         currentDate.setHours(Math.max(currentDate.getHours() + 1, 10));
         currentDate.setMinutes(currentDate.getMinutes() > 30 ? 30 : 0);
