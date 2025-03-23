@@ -6,6 +6,8 @@ export default {
     "./src/**/*.{js,ts,jsx,tsx}",
   ],
 
+  
+
   theme: {
   	extend: {
   		colors: {
@@ -97,4 +99,5 @@ export default {
   },
   plugins: [require("tailwindcss-animate")],
 }
+
 
