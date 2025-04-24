@@ -30,5 +30,5 @@ AOT (Aid On Time) is a full-stack doctor appointment system built with the MERN 
   - Manage users (patients and doctors).
   - View overall system health and data insights.
 
-##Contributing
+**Contributing**
 Feel free to fork the repository, make changes, and submit a pull request. Contributions are welcome!
