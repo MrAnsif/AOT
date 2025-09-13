@@ -52,7 +52,7 @@ const Navbar = () => {
 
             </ul>
 
-            <EmergencyCallButton />
+            {/* <EmergencyCallButton /> */}
 
             <div className='flex gap-4 items-center'>
                 {

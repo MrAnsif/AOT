@@ -31,7 +31,7 @@ const Doctors = () => {
 
   return (
     <div className='min-h-screen mb-5'>
-      <p className='text-gray-600 '>Browse through the doctors specialist.</p>
+      <p className='text-gray-600 '>Browse through the doctors specialist.(All data shown below is fake.)</p>
       <div className='flex flex-col sm:flex-row item-start gap-5 mt-5 '>
         <div className='flex flex-col gap-4 text-gray-600 text-sm '>
           <p onClick={() => speciality === 'General physician' ? navigate('/doctors') : navigate('/doctors/General physician')} className={`w-[94vw sm:w-auto pl-3 py-1.5 pr-16 border border-gray-300 rounded-lg transition-all cursor-pointer ${speciality === "General physician" ? "bg-indigo-100 text-black" : ""}]`}>General physician</p>
