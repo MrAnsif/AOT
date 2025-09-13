@@ -47,7 +47,8 @@ const bookAppointment = async (userName, doctorName, date, time) => {
 // Chatbot response handler
 export const chatbotResponse = async (req, res) => {
     try {
-        const userMessage = req.body.message.toLowerCase();
+        const userMessageRow = req.body.message.toLowerCase();
+        const userMessage =  "You are a chatbot for a doctor appointment booking system. Only respond to medical or anything related to healthcare/medical tips or any related queries or appointment-related queries.\n Message is "+ userMessageRow
 
         // Check if user asks for available doctors
         if (userMessage.includes("available doctors") || userMessage.includes("doctor list")) {
