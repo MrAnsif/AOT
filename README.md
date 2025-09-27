@@ -240,4 +240,4 @@ This project has no specified license. All rights are reserved unless explicitly
 *   **GitHub Repository:** [https://github.com/MrAnsif/AOT](https://github.com/MrAnsif/AOT)
 *   **Developer:** MrAnsif
 
-Feel free to reach out with any questions, suggestions, or issues.
+Feel free to reach out with any questions, suggestions, or issues
