@@ -138,7 +138,6 @@ Before running the application, ensure you have the following installed:
 
 2.  **User Registration/Login:**
     *   Patients can register and log in through the frontend interface `/login`.
-    *   Admin and Doctors use the same login page as well.
 
 3.  **Booking Appointments (Patient):**
     *   Browse available doctors.
